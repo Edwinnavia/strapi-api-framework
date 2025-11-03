@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "documentId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "documentId",
+        "name"
+      ]
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "data",
+    "meta"
+  ]
+}

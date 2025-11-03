@@ -1,0 +1,92 @@
+{
+  "title": "CategoryListItemsSchema",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "slug": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "name",
+          "slug",
+          "description",
+          "createdAt",
+          "updatedAt",
+          "publishedAt"
+        ]
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "pagination": {
+          "type": "object",
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "pageSize": {
+              "type": "integer"
+            },
+            "pageCount": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "page",
+            "pageSize",
+            "pageCount",
+            "total"
+          ]
+        }
+      },
+      "required": [
+        "pagination"
+      ]
+    }
+  },
+  "required": [
+    "data",
+    "meta"
+  ]
+}

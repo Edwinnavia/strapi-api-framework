@@ -1,0 +1,93 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "documentId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string"
+        },
+        "articles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "documentId": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "publishedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "documentId",
+              "title",
+              "description",
+              "slug",
+              "createdAt",
+              "updatedAt",
+              "publishedAt"
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "documentId",
+        "name",
+        "slug",
+        "description",
+        "createdAt",
+        "updatedAt",
+        "publishedAt"
+      ]
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "data",
+    "meta"
+  ]
+}

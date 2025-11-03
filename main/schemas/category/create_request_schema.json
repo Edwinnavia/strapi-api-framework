@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "articles": {
+          "type": "object",
+          "properties": {
+            "connect": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "documentId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "documentId"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "required": [
+    "data"
+  ]
+}
