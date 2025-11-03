@@ -1,0 +1,37 @@
+{
+  "title": "AuthorResponseSchema",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "articles": {
+          "type": "object",
+          "properties": {
+            "connect": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "avatar": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "required": [
+    "data"
+  ]
+}

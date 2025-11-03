@@ -1,0 +1,177 @@
+{
+  "title": "AuthorWithOptionalAvatarSchema",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "documentId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "documentId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "alternativeText": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "caption": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "formats": {
+              "type": "object",
+              "properties": {
+                "thumbnail": {
+                  "type": "object",
+                  "properties": {
+                    "ext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "hash": {
+                      "type": "string"
+                    },
+                    "mime": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "size": {
+                      "type": "number"
+                    },
+                    "width": {
+                      "type": "integer"
+                    },
+                    "height": {
+                      "type": "integer"
+                    },
+                    "sizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "ext",
+                    "url",
+                    "hash",
+                    "mime",
+                    "name",
+                    "path",
+                    "size",
+                    "width",
+                    "height",
+                    "sizeInBytes"
+                  ]
+                }
+              },
+              "required": [
+                "thumbnail"
+              ]
+            },
+            "hash": {
+              "type": "string"
+            },
+            "ext": {
+              "type": "string"
+            },
+            "mime": {
+              "type": "string"
+            },
+            "size": {
+              "type": "number"
+            },
+            "url": {
+              "type": "string"
+            },
+            "previewUrl": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "provider": {
+              "type": "string"
+            },
+            "provider_metadata": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            },
+            "publishedAt": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "documentId",
+        "name",
+        "email",
+        "createdAt",
+        "updatedAt",
+        "publishedAt"
+      ]
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "data",
+    "meta"
+  ]
+}
