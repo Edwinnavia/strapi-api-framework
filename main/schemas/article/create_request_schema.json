@@ -1,0 +1,35 @@
+{
+  "title": "ArticleSchema",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "author": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "integer"
+        },
+        "cover": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  "required": [
+    "data"
+  ]
+}
