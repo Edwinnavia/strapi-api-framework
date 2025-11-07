@@ -1,0 +1,15 @@
+from main.endpoints.article_endpoint import ArticleEndpoint
+from main.validation_manager import ValidationManager
+
+validate = ValidationManager()
+
+
+def test_list_articles_without_filters(strapi_api, module_article):
+    url = ArticleEndpoint.get_all()
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, 'article', 'list_response_schema.json')
+    validate.data.list_contains_document_id(response, module_article["documentId"])
+    validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
+    validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
