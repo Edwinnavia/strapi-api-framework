@@ -49,7 +49,7 @@ class StrapiApi:
         logger.info(f"[DELETE] {url} | Headers: {final_headers}")
         response = RequestManager.delete(url, headers=final_headers)
         if response.status_code == 204:
-            logger.info(f"→ Response [DELETE {response.status_code}]: No Content (eliminación exitosa)")
+            logger.info(f"→ Response [DELETE {response.status_code}]: No Content (successful elimination)")
         else:
             body_preview = response.text[:200] if response.text else "<sin cuerpo>"
             logger.info(f"→ Response [DELETE {response.status_code}]: {body_preview}")
