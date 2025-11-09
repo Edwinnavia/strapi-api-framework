@@ -37,7 +37,7 @@ def setup_teardown_article(article_factory):
 
 @pytest.fixture(scope="module")
 def module_article(strapi_api):
-    payload = generate_article_payload()
+    payload = generate_article_payload(author=1)
     response = ArticleHooks.before_create(strapi_api, payload)
 
     try:

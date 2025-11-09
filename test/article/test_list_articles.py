@@ -342,3 +342,17 @@ def test_list_articles_select_specific_fields(strapi_api):
     validate.data.items_only_have_fields(response, allowed_fields=allowed)
     required = {"title", "slug"}
     validate.data.items_all_have_fields(response, required_fields=required)
+
+
+def test_list_articles_with_populate(strapi_api, module_article):
+    params = {
+        "populate": "author"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, module_article["documentId"])
+    validate.data.nested_field_equals(response, document_id=module_article["documentId"], parent_field="author",
+                                      child_field="id", expected_value=1)
