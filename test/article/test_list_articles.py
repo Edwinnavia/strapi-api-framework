@@ -314,3 +314,15 @@ def test_list_articles_without_count(strapi_api):
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.pagination_has_keys(response, ["page", "pageSize"])
     validate.data.pagination_missing_keys(response, ["total", "pageCount"])
+
+
+def test_list_articles_sorted_by_title_asc(strapi_api):
+    params = {
+        "sort": "title:asc"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_is_sorted_by(response, field="title", order="asc")

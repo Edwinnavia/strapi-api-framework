@@ -179,3 +179,29 @@ class DataValidator:
         pagination = meta.get("pagination", {})
         for k in keys:
             assert k not in pagination, f"Pagination key '{k}' should NOT be present"
+
+    def list_is_sorted_by(self, response, field: str, order: str = "asc"):
+        items = self._get_items(response)
+        values = [item.get(field) for item in items]
+        sorted_values = sorted(values)
+        if order.lower() == "desc":
+            sorted_values = list(reversed(sorted_values))
+        assert values == sorted_values, f"List not sorted by '{field}' {order}. Got {values}"
+
+    def list_is_sorted_by_multiple(self, response, spec: list[tuple[str, str]]):
+        items = self._get_items(response)
+
+        def key_fn(it):
+            keys = []
+            for f, ord_ in spec:
+                val = it.get(f)
+                keys.append((val is None, val if val is not None else ""))
+            return tuple(keys)
+
+        expected = sorted(items, key=key_fn)
+        for idx, (_, ord_) in enumerate(spec):
+            if ord_.lower() == "desc":
+                expected = expected[::-1]
+                break
+
+        assert items == expected, f"List is not sorted by {spec}. Actual order differs."
