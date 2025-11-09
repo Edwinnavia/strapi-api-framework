@@ -417,3 +417,12 @@ def test_pagination_page_string(strapi_api):
 
     validate.status.bad_request(response)
 
+
+@pytest.mark.xfail(reason="BUG: Strapi returns 500 for invalid pagination[pageSize] string", strict=False)
+def test_pagination_page_size_string(strapi_api):
+    params = {"pagination[pageSize]": "text"}
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
