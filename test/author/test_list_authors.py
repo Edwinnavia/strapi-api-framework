@@ -22,3 +22,18 @@ def test_list_authors_without_filters(strapi_api, module_author):
     validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
     validate.data.item_field_equals(response, module_author["documentId"], "email", module_author["email"])
 
+
+# ============================================================
+# TC-AU-02 - Paginación por defecto
+# ============================================================
+@pytest.mark.smoke
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_default_pagination(strapi_api):
+    url = AuthorEndpoint.get_all()
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.data.pagination_value_equals(response, "page", 1)
+    validate.data.pagination_value_equals(response, "pageSize", 25)
+
