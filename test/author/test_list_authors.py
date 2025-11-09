@@ -135,3 +135,20 @@ def test_list_authors_filter_exact_name(strapi_api, module_author):
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
+
+
+# ============================================================
+# TC-AU-09 - Exact name match (case-insensitive) ($eqi)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_exact_name_case_insensitive(strapi_api, module_author):
+    params = {"filters[name][$eqi]": module_author["name"].swapcase()}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
