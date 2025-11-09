@@ -60,3 +60,16 @@ def test_list_articles_filter_by_empty_exact_title(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_count_equals(response, 0)
+
+def test_list_articles_filter_by_publishedAt_not_equal(strapi_api, module_article):
+    published_at = module_article["publishedAt"]
+    params = {
+        "filters[publishedAt][$ne]": published_at
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_not_contains_document_id(response, module_article["documentId"])

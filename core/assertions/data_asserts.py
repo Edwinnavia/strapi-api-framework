@@ -53,6 +53,16 @@ class DataValidator:
         self._log("info", f"List has exactly {expected_count} items.")
         return True
 
+    def list_not_contains_document_id(self, response, document_id: str):
+        self._log("info", f"Validating documentId '{document_id}' is NOT present in list...")
+        items = self._get_items(response)
+
+        assert all(item.get("documentId") != document_id for item in items), (
+            f"documentId '{document_id}' SHOULD NOT be present in response list, but it was found."
+        )
+
+        self._log("info", f"documentId '{document_id}' correctly NOT found in response list.")
+
     def item_field_equals(self, response, document_id: str, field: str, expected_value):
         self._log("info", f"Validating field '{field}' for documentId '{document_id}'...")
         item = self._find_item(response, document_id)
