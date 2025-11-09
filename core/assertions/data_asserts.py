@@ -165,3 +165,17 @@ class DataValidator:
             )
 
         self._log("info", "All pagination fields validated successfully.")
+
+    def pagination_has_keys(self, response, keys: list[str]):
+        body = self._extract_json(response)
+        meta = body.get("meta", {})
+        pagination = meta.get("pagination", {})
+        for k in keys:
+            assert k in pagination, f"Expected pagination key '{k}' not found"
+
+    def pagination_missing_keys(self, response, keys: list[str]):
+        body = self._extract_json(response)
+        meta = body.get("meta", {})
+        pagination = meta.get("pagination", {})
+        for k in keys:
+            assert k not in pagination, f"Pagination key '{k}' should NOT be present"

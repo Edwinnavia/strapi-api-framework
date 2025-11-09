@@ -301,3 +301,16 @@ def test_list_articles_custom_pagination(strapi_api):
     validate.data.pagination_value_equals(response, "page", 2)
     validate.data.pagination_value_equals(response, "pageSize", 5)
     validate.data.list_count_equals(response, len(response.json()["data"]))
+
+
+def test_list_articles_without_count(strapi_api):
+    params = {
+        "pagination[withCount]": "false"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.pagination_has_keys(response, ["page", "pageSize"])
+    validate.data.pagination_missing_keys(response, ["total", "pageCount"])
