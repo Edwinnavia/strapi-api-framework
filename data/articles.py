@@ -5,11 +5,13 @@ fake = Faker()
 
 def generate_article_payload(title=None, description=None, slug=None,
                              author=None, category=None):
+    final_title = title or fake.sentence(nb_words=3).replace(".", "")
+
     payload = {
         "data": {
-            "title": title or fake.sentence(nb_words=3).replace(".", ""),
+            "title": final_title,
             "description": description or fake.text(max_nb_chars=100),
-            "slug": slug or fake.slug(),
+            "slug": slug or final_title.lower().replace(" ", "-"),
         }
     }
 
