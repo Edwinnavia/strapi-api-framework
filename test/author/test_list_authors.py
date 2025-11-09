@@ -234,3 +234,20 @@ def test_list_authors_filter_and(strapi_api, module_author):
     validate.schema.validate_response(response, "author", "list_response_schema.json")
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_author["documentId"])
+
+
+# ============================================================
+# TC-AU-14 - withCount=false (should not return total/pageCount)
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_without_count(strapi_api):
+    params = {"pagination[withCount]": "false"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.pagination_has_keys(response, ["page", "pageSize"])
+    validate.data.pagination_missing_keys(response, ["total", "pageCount"])
