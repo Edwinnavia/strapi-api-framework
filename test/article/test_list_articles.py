@@ -1,7 +1,7 @@
 from main.endpoints.article_endpoint import ArticleEndpoint
 from main.validation_manager import ValidationManager
 from data.articles import generate_article_payload
-import time
+import time, pytest
 
 validate = ValidationManager()
 
@@ -381,3 +381,15 @@ def test_list_articles_with_malformed_params_ignored(strapi_api):
 
     validate.status.ok(response)
     validate.schema.validate_response(response, "article", "list_response_schema.json")
+
+
+@pytest.mark.xfail(reason="BUG-01: invalid filter type returns 500 instead of 400", strict=True)
+def test_list_articles_with_invalid_filter_type(strapi_api):
+    params = {
+        "filters[id][$eq]": "not_a_number"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
