@@ -284,3 +284,20 @@ def test_list_articles_default_pagination(strapi_api, module_article):
     validate.data.pagination_value_equals(response, "pageSize", 25)
     validate.data.pagination_greater_equal(response, "total", 1)
     validate.data.list_contains_document_id(response, module_article["documentId"])
+
+
+def test_list_articles_custom_pagination(strapi_api):
+    params = {
+        "pagination[page]": 2,
+        "pagination[pageSize]": 5
+    }
+
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.pagination_exists(response)
+    validate.data.pagination_value_equals(response, "page", 2)
+    validate.data.pagination_value_equals(response, "pageSize", 5)
+    validate.data.list_count_equals(response, len(response.json()["data"]))
