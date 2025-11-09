@@ -83,3 +83,10 @@ class DataValidator:
             f"Expected response['{field}'] = '{expected_value}', got '{actual_value}'"
         )
         self._log("info", f"Root field '{field}' validated successfully.")
+
+    def item_field_not_null(self, response, document_id: str, field: str):
+        item = self._find_item(response, document_id)
+        actual_value = item.get(field)
+        assert actual_value is not None, (
+            f"Expected '{field}' to be non-null for documentId '{document_id}', but got null"
+        )

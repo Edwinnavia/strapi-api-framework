@@ -194,3 +194,17 @@ def test_list_articles_filter_ends_with_slug(strapi_api, article_factory):
     validate.data.list_contains_document_id(response, article["documentId"])
     validate.data.item_field_equals(response, article["documentId"], "slug", article["slug"])
 
+
+def test_list_articles_filter_published(strapi_api, module_article):
+    params = {
+        "filters[publishedAt][$notNull]": True
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_contains_document_id(response, module_article["documentId"])
+    validate.data.item_field_not_null(response, module_article["documentId"], "publishedAt")
+
