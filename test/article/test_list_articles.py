@@ -426,6 +426,7 @@ def test_pagination_page_size_string(strapi_api):
 
     validate.status.bad_request(response)
 
+
 @pytest.mark.xfail(reason="BUG: Strapi allows decimal page values or returns 500", strict=False)
 def test_pagination_page_decimal(strapi_api):
     params = {"pagination[page]": "1.5"}
@@ -435,3 +436,10 @@ def test_pagination_page_decimal(strapi_api):
     validate.status.bad_request(response)
 
 
+@pytest.mark.xfail(reason="BUG: Strapi handles decimal pageSize incorrectly", strict=False)
+def test_pagination_page_size_decimal(strapi_api):
+    params = {"pagination[pageSize]": "10.7"}
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
