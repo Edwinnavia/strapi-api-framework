@@ -207,7 +207,6 @@ def test_list_authors_filter_or(strapi_api, module_author, author_factory):
         "filters[$or][0][name][$eq]": module_author["name"],
         "filters[$or][1][email][$eq]": second_author["email"],
     }
-
     url = AuthorEndpoint.get_all(params)
     response = strapi_api.get(url)
 
@@ -215,3 +214,23 @@ def test_list_authors_filter_or(strapi_api, module_author, author_factory):
     validate.schema.validate_response(response, "author", "list_response_schema.json")
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.list_contains_document_id(response, second_author["documentId"])
+
+
+# ============================================================
+# TC-AU-13 - Logical AND: name AND email
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_and(strapi_api, module_author):
+    params = {
+        "filters[$and][0][name][$eq]": module_author["name"],
+        "filters[$and][1][email][$eq]": module_author["email"],
+    }
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_author["documentId"])
