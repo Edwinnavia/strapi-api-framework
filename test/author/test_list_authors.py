@@ -59,7 +59,6 @@ def test_list_authors_custom_pagination(strapi_api):
 # ============================================================
 # TC-AU-04 - List authors with populated articles
 # ============================================================
-@pytest.mark.list_authors
 @pytest.mark.positive
 @pytest.mark.functional
 def test_list_authors_with_populate_articles(strapi_api, module_author):
@@ -94,7 +93,6 @@ def test_list_authors_select_specific_fields(strapi_api):
 # ============================================================
 # TC-AU-06 - Sort authors by name ascending
 # ============================================================
-@pytest.mark.authors
 @pytest.mark.positive
 @pytest.mark.functional
 def test_list_authors_sorted_by_name_asc(strapi_api):
@@ -120,3 +118,20 @@ def test_list_authors_sorted_by_created_desc(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "author", "list_response_schema.json")
     validate.data.list_is_sorted_by(response, field="createdAt", order="desc")
+
+
+# ============================================================
+# TC-AU-08 - Filter authors by exact name ($eq)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_exact_name(strapi_api, module_author):
+    params = {"filters[name][$eq]": module_author["name"]}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
