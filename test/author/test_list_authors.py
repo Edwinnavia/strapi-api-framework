@@ -152,3 +152,22 @@ def test_list_authors_filter_exact_name_case_insensitive(strapi_api, module_auth
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
+
+
+# ============================================================
+# TC-AU-10 - Email contains ($contains)
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_email_contains(strapi_api, module_author):
+    email_fragment = module_author["email"].split("@")[0]
+    params = {"filters[email][$contains]": email_fragment}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.item_field_equals(response, module_author["documentId"], "email", module_author["email"])
