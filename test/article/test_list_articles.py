@@ -159,3 +159,20 @@ def test_list_articles_filter_contains_title_case_insensitive(strapi_api, articl
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, article["documentId"])
+
+
+def test_list_articles_filter_starts_with_slug(strapi_api, article_factory):
+    article = article_factory(
+        generate_article_payload(slug="automation_startslike_this")
+    )
+    params = {
+        "filters[slug][$startsWith]": "automation_"
+    }
+    url = ArticleEndpoint.get_all(params)
+
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, article["documentId"])
+    validate.data.item_field_equals(response, article["documentId"], "slug", article["slug"])
