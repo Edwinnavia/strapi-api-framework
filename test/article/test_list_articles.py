@@ -326,3 +326,19 @@ def test_list_articles_sorted_by_title_asc(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_is_sorted_by(response, field="title", order="asc")
+
+
+def test_list_articles_select_specific_fields(strapi_api):
+    params = {
+        "fields[0]": "title",
+        "fields[1]": "slug"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    allowed = {"title", "slug", "id", "documentId"}
+    validate.data.items_only_have_fields(response, allowed_fields=allowed)
+    required = {"title", "slug"}
+    validate.data.items_all_have_fields(response, required_fields=required)

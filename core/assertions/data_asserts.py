@@ -188,20 +188,14 @@ class DataValidator:
             sorted_values = list(reversed(sorted_values))
         assert values == sorted_values, f"List not sorted by '{field}' {order}. Got {values}"
 
-    def list_is_sorted_by_multiple(self, response, spec: list[tuple[str, str]]):
+    def items_only_have_fields(self, response, allowed_fields: set[str]):
         items = self._get_items(response)
+        for it in items:
+            extra = set(it.keys()) - allowed_fields
+            assert not extra, f"Unexpected fields present: {extra}"
 
-        def key_fn(it):
-            keys = []
-            for f, ord_ in spec:
-                val = it.get(f)
-                keys.append((val is None, val if val is not None else ""))
-            return tuple(keys)
-
-        expected = sorted(items, key=key_fn)
-        for idx, (_, ord_) in enumerate(spec):
-            if ord_.lower() == "desc":
-                expected = expected[::-1]
-                break
-
-        assert items == expected, f"List is not sorted by {spec}. Actual order differs."
+    def items_all_have_fields(self, response, required_fields: set[str]):
+        items = self._get_items(response)
+        for it in items:
+            missing = required_fields - set(it.keys())
+            assert not missing, f"Missing required fields: {missing}"
