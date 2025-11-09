@@ -443,3 +443,12 @@ def test_pagination_page_size_decimal(strapi_api):
     response = strapi_api.get(url)
 
     validate.status.bad_request(response)
+
+
+@pytest.mark.xfail(reason="BUG: Strapi does not validate negative page numbers", strict=False)
+def test_pagination_page_negative(strapi_api):
+    params = {"pagination[page]": "-1"}
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
