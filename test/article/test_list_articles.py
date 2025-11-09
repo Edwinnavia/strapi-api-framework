@@ -407,3 +407,13 @@ def test_list_articles_with_multiple_params(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_not_empty(response)
+
+
+@pytest.mark.xfail(reason="BUG: Strapi returns 500 for invalid pagination[page] string", strict=False)
+def test_pagination_page_string(strapi_api):
+    params = {"pagination[page]": "text"}
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
