@@ -271,3 +271,16 @@ def test_list_articles_filter_not_title(strapi_api, module_article):
     validate.data.list_not_empty(response)
     validate.data.list_not_contains_document_id(response, module_article["documentId"])
 
+
+def test_list_articles_default_pagination(strapi_api, module_article):
+    url = ArticleEndpoint.get_all()
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+
+    validate.data.pagination_exists(response)
+    validate.data.pagination_value_equals(response, "page", 1)
+    validate.data.pagination_value_equals(response, "pageSize", 25)
+    validate.data.pagination_greater_equal(response, "total", 1)
+    validate.data.list_contains_document_id(response, module_article["documentId"])

@@ -117,3 +117,51 @@ class DataValidator:
             f"Nested field '{parent_field}.{child_field}' validated successfully "
             f"for documentId '{document_id}'."
         )
+
+    def pagination_exists(self, response):
+        response_json = self._extract_json(response)
+
+        self._log("info", "Checking pagination metadata existence...")
+
+        pagination = response_json.get("meta", {}).get("pagination")
+        assert pagination is not None, "Pagination metadata is missing."
+
+        for field in ["page", "pageSize", "pageCount", "total"]:
+            assert field in pagination, f"Pagination field '{field}' is missing."
+
+        self._log("info", "Pagination metadata exists and contains required fields.")
+
+    def pagination_value_equals(self, response, field: str, expected_value):
+        self._log("info", f"Validating pagination field '{field}' equals '{expected_value}'...")
+        pagination = self._extract_json(response).get("meta", {}).get("pagination", {})
+
+        actual = pagination.get(field)
+        assert actual == expected_value, (
+            f"Expected pagination['{field}'] = {expected_value}, but got {actual}"
+        )
+
+        self._log("info", f"Pagination field '{field}' validated successfully.")
+
+    def pagination_greater_equal(self, response, field: str, min_value: int):
+        self._log("info", f"Validating pagination field '{field}' >= {min_value}...")
+        pagination = self._extract_json(response).get("meta", {}).get("pagination", {})
+
+        actual = pagination.get(field)
+        assert actual >= min_value, (
+            f"Expected pagination['{field}'] >= {min_value}, but got {actual}"
+        )
+
+        self._log("info", f"Pagination field '{field}' meets minimum requirement.")
+
+    def pagination_matches(self, response, expected: dict):
+        self._log("info", "Validating multiple pagination fields...")
+
+        pagination = self._extract_json(response).get("meta", {}).get("pagination", {})
+
+        for field, value in expected.items():
+            actual = pagination.get(field)
+            assert actual == value, (
+                f"Expected pagination['{field}'] = {value}, but got {actual}"
+            )
+
+        self._log("info", "All pagination fields validated successfully.")
