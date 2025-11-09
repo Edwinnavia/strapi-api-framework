@@ -152,3 +152,27 @@ def test_list_articles_between_single_match(strapi_api, article_factory):
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_contains_document_id(response, article2["documentId"])
 
+
+def test_list_articles_filter_contains_title(strapi_api, article_factory):
+    payload = {
+        "data": {
+            "title": "PythonAutomationMagic",
+            "description": "Descripción de prueba",
+            "slug": "python-automation-magic",
+        }
+    }
+    article = article_factory(payload)
+
+    keyword = "Automation"
+
+    params = {
+        "filters[title][$contains]": keyword
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, article["documentId"])
+    validate.data.item_field_equals(response, article["documentId"], "title", article["title"])
+    validate.data.item_field_equals(response, article["documentId"], "slug", article["slug"])
