@@ -171,3 +171,24 @@ def test_list_authors_filter_email_contains(strapi_api, module_author):
     validate.data.list_not_empty(response)
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.item_field_equals(response, module_author["documentId"], "email", module_author["email"])
+
+# ============================================================
+# TC-AU-11 - Combined filters: name AND email
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_name_and_email(strapi_api, module_author):
+    params = {
+        "filters[name][$eq]": module_author["name"],
+        "filters[email][$eq]": module_author["email"],
+    }
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
+    validate.data.item_field_equals(response, module_author["documentId"], "email", module_author["email"])
