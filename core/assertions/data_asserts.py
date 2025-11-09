@@ -90,3 +90,10 @@ class DataValidator:
         assert actual_value is not None, (
             f"Expected '{field}' to be non-null for documentId '{document_id}', but got null"
         )
+
+    def item_field_is_null(self, response, document_id, field):
+        item = self._find_item(response, document_id)
+        actual = item.get(field)
+        assert actual is None, (
+            f"Expected field '{field}' to be null, but got '{actual}'"
+        )

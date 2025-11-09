@@ -196,9 +196,7 @@ def test_list_articles_filter_ends_with_slug(strapi_api, article_factory):
 
 
 def test_list_articles_filter_published(strapi_api, module_article):
-    params = {
-        "filters[publishedAt][$notNull]": True
-    }
+    params = {"status": "published"}
     url = ArticleEndpoint.get_all(params)
     response = strapi_api.get(url)
 
@@ -208,3 +206,17 @@ def test_list_articles_filter_published(strapi_api, module_article):
     validate.data.list_contains_document_id(response, module_article["documentId"])
     validate.data.item_field_not_null(response, module_article["documentId"], "publishedAt")
 
+
+def test_list_articles_filter_draft(strapi_api, article_factory):
+    draft_payload = generate_article_payload()
+    draft_payload["data"]["publishedAt"] = None
+    draft_article = article_factory(draft_payload)
+    params = {"status": "draft"}
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_contains_document_id(response, draft_article["documentId"])
+    validate.data.item_field_is_null(response, draft_article["documentId"], "publishedAt")
