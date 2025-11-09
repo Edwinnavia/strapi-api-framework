@@ -1,5 +1,6 @@
 from main.endpoints.article_endpoint import ArticleEndpoint
 from main.validation_manager import ValidationManager
+import time
 
 validate = ValidationManager()
 
@@ -128,3 +129,26 @@ def test_list_articles_filter_id_lt(strapi_api, module_article):
     validate.data.item_field_equals(response, module_article["documentId"], "id", module_article["id"])
     validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
     validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
+
+
+def test_list_articles_between_single_match(strapi_api, article_factory):
+    article1 = article_factory()
+    time.sleep(1)
+
+    article2 = article_factory()
+    time.sleep(1)
+
+    article3 = article_factory()
+
+    params = {
+        "filters[createdAt][$between][0]": article1["createdAt"],
+        "filters[createdAt][$between][1]": article3["createdAt"]
+    }
+
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, article2["documentId"])
+
