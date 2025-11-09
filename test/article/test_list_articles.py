@@ -257,3 +257,17 @@ def test_list_articles_filter_author_not_null(strapi_api, article_factory):
     validate.data.list_contains_document_id(response, article["documentId"])
     validate.data.nested_field_equals(response, document_id=article["documentId"], parent_field="author",
                                       child_field="id", expected_value=1)
+
+
+def test_list_articles_filter_not_title(strapi_api, module_article):
+    params = {
+        "filters[$not][title][$eq]": module_article["title"]
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_not_contains_document_id(response, module_article["documentId"])
+
