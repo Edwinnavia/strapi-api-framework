@@ -393,3 +393,17 @@ def test_list_articles_with_invalid_filter_type(strapi_api):
 
     validate.status.bad_request(response)
 
+
+def test_list_articles_with_multiple_params(strapi_api):
+    params = {
+        "status": "published",
+        "sort": "title:asc",
+        "pagination[pageSize]": 10,
+        "populate": "author"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
