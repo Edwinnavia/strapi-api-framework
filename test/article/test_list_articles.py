@@ -30,3 +30,20 @@ def test_list_articles_filter_by_exact_title(strapi_api, module_article):
     validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
     validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
 
+
+def test_list_articles_filter_by_exact_title_case_insensitive(strapi_api, module_article):
+    original_title = module_article["title"]
+    mixed_case_title = original_title.swapcase()
+    params = {
+        "filters[title][$eqi]": mixed_case_title
+    }
+
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_article["documentId"])
+    validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
+    validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
