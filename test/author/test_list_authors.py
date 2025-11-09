@@ -251,3 +251,27 @@ def test_list_authors_without_count(strapi_api):
     validate.schema.validate_response(response, "author", "list_response_schema.json")
     validate.data.pagination_has_keys(response, ["page", "pageSize"])
     validate.data.pagination_missing_keys(response, ["total", "pageCount"])
+
+
+# ============================================================
+# TC-AU-15 - populate + fields
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_populate_and_fields(strapi_api):
+    params = {
+        "populate": "articles",
+        "fields[0]": "name",
+        "fields[1]": "email"
+    }
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    allowed = {"name", "email", "id", "documentId", "articles"}
+    validate.data.items_only_have_fields(response, allowed_fields=allowed)
+    required = {"name", "email"}
+    validate.data.items_all_have_fields(response, required_fields=required)

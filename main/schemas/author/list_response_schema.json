@@ -17,7 +17,10 @@
             "type": "string"
           },
           "email": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -35,11 +38,7 @@
         "required": [
           "id",
           "documentId",
-          "name",
-          "email",
-          "createdAt",
-          "updatedAt",
-          "publishedAt"
+          "name"
         ]
       }
     },
