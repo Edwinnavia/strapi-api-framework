@@ -85,3 +85,18 @@ def test_list_authors_select_specific_fields(strapi_api):
     validate.data.items_only_have_fields(response, allowed_fields={"id", "documentId", "name", "email"})
     validate.data.items_all_have_fields(response, required_fields={"name", "email"})
 
+# ============================================================
+# TC-AU-06 - Sort authors by name ascending
+# ============================================================
+@pytest.mark.authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_sorted_by_name_asc(strapi_api):
+    params = {"sort": "name:asc"}
+    url = AuthorEndpoint.get_all(params)
+
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_is_sorted_by(response, field="name", order="asc")
