@@ -37,3 +37,17 @@ def test_list_authors_default_pagination(strapi_api):
     validate.data.pagination_value_equals(response, "page", 1)
     validate.data.pagination_value_equals(response, "pageSize", 25)
 
+
+# ============================================================
+# TC-AU-03 - Paginación personalizada
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_custom_pagination(strapi_api):
+    params = {"pagination[page]": 2, "pagination[pageSize]": 5}
+    url = AuthorEndpoint.get_all(params)
+
+    response = strapi_api.get(url)
+    validate.status.ok(response)
+    validate.data.pagination_value_equals(response, "page", 2)
+    validate.data.pagination_value_equals(response, "pageSize", 5)
