@@ -69,3 +69,19 @@ def test_list_authors_with_populate_articles(strapi_api, module_author):
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.nested_list_not_empty(response, document_id=module_author["documentId"],
                                         parent_field="articles")
+
+
+# ============================================================
+# TC-AU-05 - Selección de campos específicos
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_select_specific_fields(strapi_api):
+    params = {"fields[0]": "name", "fields[1]": "email"}
+    url = AuthorEndpoint.get_all(params)
+
+    response = strapi_api.get(url)
+    validate.status.ok(response)
+    validate.data.items_only_have_fields(response, allowed_fields={"id", "documentId", "name", "email"})
+    validate.data.items_all_have_fields(response, required_fields={"name", "email"})
+
