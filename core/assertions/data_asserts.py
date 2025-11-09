@@ -199,3 +199,10 @@ class DataValidator:
         for it in items:
             missing = required_fields - set(it.keys())
             assert not missing, f"Missing required fields: {missing}"
+
+    def nested_list_not_empty(self, response, document_id, parent_field):
+        item = self._find_item(response, document_id)
+
+        nested = item.get(parent_field)
+        assert isinstance(nested, list), f"Expected '{parent_field}' to be a list"
+        assert len(nested) > 0, f"Expected '{parent_field}' list to be non-empty"

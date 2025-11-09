@@ -11,7 +11,7 @@ def strapi_api():
     return StrapiApi()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def module_article(strapi_api):
     payload = generate_article_payload(author=1)
     response = ArticleHooks.before_create(strapi_api, payload)
@@ -20,7 +20,7 @@ def module_article(strapi_api):
     ArticleHooks.after_delete(strapi_api, data["documentId"])
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def module_author(strapi_api, module_article):
     payload = generate_author_payload(
         articles=[module_article["documentId"]],

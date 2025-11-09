@@ -51,3 +51,21 @@ def test_list_authors_custom_pagination(strapi_api):
     validate.status.ok(response)
     validate.data.pagination_value_equals(response, "page", 2)
     validate.data.pagination_value_equals(response, "pageSize", 5)
+
+
+# ============================================================
+# TC-AU-04 - List authors with populated articles
+# ============================================================
+@pytest.mark.list_authors
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_with_populate_articles(strapi_api, module_author):
+    params = {"populate": "articles"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.nested_list_not_empty(response, document_id=module_author["documentId"],
+                                        parent_field="articles")
