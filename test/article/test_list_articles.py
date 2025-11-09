@@ -370,3 +370,14 @@ def test_list_articles_filter_title_and_status(strapi_api, module_article):
     validate.schema.validate_response(response, "article", "list_response_schema.json")
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_article["documentId"])
+
+
+def test_list_articles_with_malformed_params_ignored(strapi_api):
+    params = {
+        "filters[title][eq]": "InvalidFormat"
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
