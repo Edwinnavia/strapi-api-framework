@@ -220,3 +220,22 @@ def test_list_articles_filter_draft(strapi_api, article_factory):
     validate.data.list_not_empty(response)
     validate.data.list_contains_document_id(response, draft_article["documentId"])
     validate.data.item_field_is_null(response, draft_article["documentId"], "publishedAt")
+
+
+def test_list_articles_filter_author_null(strapi_api, article_factory):
+    payload = generate_article_payload(author=None)
+    article_null_author = article_factory(payload)
+
+    params = {
+        "filters[author][$null]": "true"
+    }
+
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_contains_document_id(response, article_null_author["documentId"])
+    validate.data.item_field_is_null(response, article_null_author["documentId"], "author")
+
