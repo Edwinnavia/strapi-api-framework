@@ -10,7 +10,7 @@ def generate_article_payload(title=None, description=None, slug=None,
     payload = {
         "data": {
             "title": final_title,
-            "description": description or fake.text(max_nb_chars=100),
+            "description": description or fake.text(max_nb_chars=80),
             "slug": slug or final_title.lower().replace(" ", "-"),
         }
     }

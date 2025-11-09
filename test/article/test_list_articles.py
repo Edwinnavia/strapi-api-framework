@@ -239,3 +239,21 @@ def test_list_articles_filter_author_null(strapi_api, article_factory):
     validate.data.list_contains_document_id(response, article_null_author["documentId"])
     validate.data.item_field_is_null(response, article_null_author["documentId"], "author")
 
+
+def test_list_articles_filter_author_not_null(strapi_api, article_factory):
+    payload = generate_article_payload(author=1)
+    article = article_factory(payload)
+
+    params = {
+        "filters[author][$notNull]": "true",
+        "populate": "author"
+    }
+
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, article["documentId"])
+    validate.data.nested_field_equals(response, document_id=article["documentId"], parent_field="author",
+                                      child_field="id", expected_value=1)

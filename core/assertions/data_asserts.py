@@ -97,3 +97,23 @@ class DataValidator:
         assert actual is None, (
             f"Expected field '{field}' to be null, but got '{actual}'"
         )
+
+    def nested_field_equals(self, response, document_id: str, parent_field: str, child_field: str, expected_value):
+        item = self._find_item(response, document_id)
+
+        nested_obj = item.get(parent_field)
+        assert nested_obj is not None, (
+            f"Parent field '{parent_field}' not found for documentId '{document_id}'."
+        )
+
+        actual_value = nested_obj.get(child_field)
+        assert actual_value == expected_value, (
+            f"Expected nested field '{parent_field}.{child_field}' "
+            f"to be '{expected_value}', but got '{actual_value}'."
+        )
+
+        self._log(
+            "info",
+            f"Nested field '{parent_field}.{child_field}' validated successfully "
+            f"for documentId '{document_id}'."
+        )
