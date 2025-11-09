@@ -111,3 +111,20 @@ def test_list_articles_filter_and(strapi_api, module_article):
     validate.data.list_contains_document_id(response, module_article["documentId"])
     validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
     validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
+
+
+def test_list_articles_filter_id_lt(strapi_api, module_article):
+    lt_value = module_article["id"] + 1
+    params = {
+        "filters[id][$lt]": lt_value
+    }
+    url = ArticleEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "article", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    validate.data.list_contains_document_id(response, module_article["documentId"])
+    validate.data.item_field_equals(response, module_article["documentId"], "id", module_article["id"])
+    validate.data.item_field_equals(response, module_article["documentId"], "title", module_article["title"])
+    validate.data.item_field_equals(response, module_article["documentId"], "slug", module_article["slug"])
