@@ -1,0 +1,11 @@
+2025-11-10 18:38:54 | INFO | validation_manager | Loaded schema: create_request_schema.json
+2025-11-10 18:38:54 | INFO | validation_manager | JSON schema validation passed: create_request_schema.json
+2025-11-10 18:38:54 | INFO | strapi_api | [POST] https://tranquil-compassion-986c2331de.strapiapp.com/api/articles | Payload: {'data': {'title': 'Effect know give', 'description': 'Seven understand family across include particularly his.', 'slug': 'effect-know-give', 'category': 105}} | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer e9a8d0f1e219fd7b3b23a4cab768dd050860ca917cd0560d9f56f3c54b24d420878de876c6ef4ff50016e1eb556cadbb2bc65919edd572a2e4fcd978fd9ad5a7c578282397f577223f0ec283db0c6315053a7028fcb390e63db634fd9f62fafacbd83d42b08989df2767dc45f99331b13cc8c7cedd2aa9707c70c0f3ce472b6e'}
+2025-11-10 18:38:54 | INFO | strapi_api | → Response [POST 201]: {"data":{"id":758,"documentId":"iuc5iehxqtn0y0smic9t8nvg","title":"Effect know give","description":"Seven understand family across include particularly his.","slug":"effect-know-give","createdAt":"202...
+2025-11-10 18:38:54 | INFO | validation_manager | Validating status code 201 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/articles
+2025-11-10 18:38:54 | INFO | validation_manager |  Status code 201 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/articles
+2025-11-10 18:38:54 | INFO | validation_manager | Validating response JSON against 'create_response_schema.json'
+2025-11-10 18:38:54 | INFO | validation_manager | Loaded schema: create_response_schema.json
+2025-11-10 18:38:54 | INFO | validation_manager | JSON schema validation passed: create_response_schema.json
+2025-11-10 18:38:54 | INFO | strapi_api | [DELETE] https://tranquil-compassion-986c2331de.strapiapp.com/api/articles/iuc5iehxqtn0y0smic9t8nvg | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer e9a8d0f1e219fd7b3b23a4cab768dd050860ca917cd0560d9f56f3c54b24d420878de876c6ef4ff50016e1eb556cadbb2bc65919edd572a2e4fcd978fd9ad5a7c578282397f577223f0ec283db0c6315053a7028fcb390e63db634fd9f62fafacbd83d42b08989df2767dc45f99331b13cc8c7cedd2aa9707c70c0f3ce472b6e'}
+2025-11-10 18:38:54 | INFO | strapi_api | → Response [DELETE 204]: No Content (successful elimination)
