@@ -335,3 +335,20 @@ def test_list_authors_combined_params(strapi_api):
     validate.data.list_not_empty(response)
     validate.data.list_is_sorted_by(response, field="createdAt", order="desc")
     validate.data.items_field_contains(response, field="name", substring="a")
+
+
+# ============================================================
+# TC-AU-19 - pagination[page] as string (BUG)
+# ID: TC-AU-19 | Name: Invalid page type (string)
+# ============================================================
+@pytest.mark.list_authors
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi returns 500 when pagination[page] is a string", strict=False)
+def test_list_authors_page_string(strapi_api):
+    params = {"pagination[page]": "asdasd"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
