@@ -114,3 +114,18 @@ def test_list_categories_filter_exact_name(strapi_api, module_category):
     validate.status.ok(response)
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_category["documentId"])
+
+
+# ============================================================
+# TC-CA-08 - Nombre contiene parcial ($contains)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_contains_name(strapi_api, module_category):
+    fragment = module_category["name"][:3]
+    params = {"filters[name][$contains]": fragment}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.data.list_contains_document_id(response, module_category["documentId"])
