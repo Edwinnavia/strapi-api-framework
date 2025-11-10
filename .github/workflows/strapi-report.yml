@@ -4,16 +4,19 @@ on:
   push:
     branches: [ development ]
   pull_request:
-    branches:
-      - development
+    branches: [ development ]
 
 jobs:
   autotests:
-    name: Run tests and generate Allure Report
+    name: Run Pytest + Allure and Deploy Report
     runs-on: ubuntu-latest
 
+    env:
+      BASE_URI: ${{ secrets.BASE_URI }}
+      API_TOKEN: ${{ secrets.API_TOKEN }}
+
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python 3.12
@@ -26,29 +29,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Tests and Collect Allure Results
+      - name: Run Pytest with Allure
         run: |
-          pytest --alluredir=allure-results
+          pytest -m "functional" --alluredir=allure-results
         continue-on-error: true
 
-      - name: Get Allure history from gh-pages
+      - name: Download Allure CLI
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.25.0/allure-2.25.0.tgz
+          tar -xvzf allure-2.25.0.tgz
+          sudo mv allure-2.25.0/bin/allure /usr/bin/allure
+          allure --version
+
+      - name: Generate Allure Report
+        run: |
+          allure generate allure-results -o allure-report --clean
+
+      - name: Checkout GitHub Pages branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: allure-history
         continue-on-error: true
 
-      - name: Generate Allure Report (no Docker)
-        uses: simple-elf/allure-report-action@v1.5
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          allure_history: allure-history
-
       - name: Deploy report to GitHub Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
           github_token: ${{ secrets.GH_PAT }}
-          publish_branch: gh-pages
           publish_dir: allure-report
+          publish_branch: gh-pages
