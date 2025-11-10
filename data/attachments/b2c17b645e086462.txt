@@ -1,0 +1,4 @@
+2025-11-10 19:21:44 | INFO | strapi_api | [POST] https://tranquil-compassion-986c2331de.strapiapp.com/api/categories | Payload: {'data': {'name': 'Economic', 'slug': 'economic', 'description': 'Radio take heart century reality.'}} | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}
+2025-11-10 19:21:44 | INFO | strapi_api | → Response [POST 403]: {"data":null,"error":{"status":403,"name":"ForbiddenError","message":"Forbidden","details":{}}}...
+2025-11-10 19:21:44 | INFO | validation_manager | Validating status code 403 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/categories
+2025-11-10 19:21:44 | INFO | validation_manager |  Status code 403 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/categories

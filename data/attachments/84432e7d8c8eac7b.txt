@@ -1,8 +1,0 @@
-2025-11-10 19:15:39 | INFO | strapi_api | [GET] https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?sort=name%3Aasc | Params: None | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer e9a8d0f1e219fd7b3b23a4cab768dd050860ca917cd0560d9f56f3c54b24d420878de876c6ef4ff50016e1eb556cadbb2bc65919edd572a2e4fcd978fd9ad5a7c578282397f577223f0ec283db0c6315053a7028fcb390e63db634fd9f62fafacbd83d42b08989df2767dc45f99331b13cc8c7cedd2aa9707c70c0f3ce472b6e'}
-2025-11-10 19:15:40 | INFO | strapi_api | → Response [GET 200]: {"data":[{"id":166,"documentId":"ao3at6k41ft4e5epttkfqlcu","name":"AAA","slug":"aaa","description":null,"createdAt":"2025-11-10T18:52:30.588Z","updatedAt":"2025-11-10T18:52:30.588Z","publishedAt":"202...
-2025-11-10 19:15:40 | INFO | validation_manager | Validating status code 200 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?sort=name%3Aasc
-2025-11-10 19:15:40 | INFO | validation_manager |  Status code 200 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?sort=name%3Aasc
-2025-11-10 19:15:40 | INFO | validation_manager | Validating response JSON against 'list_response_schema.json'
-2025-11-10 19:15:40 | INFO | validation_manager | Loaded schema: list_response_schema.json
-2025-11-10 19:15:40 | INFO | validation_manager | JSON schema validation passed: list_response_schema.json
-2025-11-10 19:15:40 | INFO | validation_manager | Extracting JSON from response...

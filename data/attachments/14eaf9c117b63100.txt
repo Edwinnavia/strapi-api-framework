@@ -1,0 +1,4 @@
+INFO     strapi_api:strapi_api.py:35 [POST] https://tranquil-compassion-986c2331de.strapiapp.com/api/articles | Payload: {'data': {'title': 'Professor fact', 'description': 'Mother like wide final. Church one start again.', 'slug': 'professor-fact'}} | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer INVALIDTOKEN123'}
+INFO     strapi_api:strapi_api.py:37 → Response [POST 401]: {"data":null,"error":{"status":401,"name":"UnauthorizedError","message":"Missing or invalid credentials","details":{}}}...
+INFO     validation_manager:status_asserts.py:10 Validating status code 401 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/articles
+INFO     validation_manager:status_asserts.py:10  Status code 401 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/articles
