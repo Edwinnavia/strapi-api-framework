@@ -42,3 +42,19 @@ def test_create_article_minimum_fields(strapi_api, teardown_article):
     validate.status.created(response)
     validate.schema.validate_response(response, "article", "create_response_schema.json")
     validate.data.item_field_equals_response(response, "title", payload["data"]["title"])
+
+
+# ============================================================
+# TC-CA-03 - Create article with empty description
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_create_article_empty_description(strapi_api, teardown_article):
+    payload = generate_article_payload(description="")
+    validate.schema.validate_payload(payload, "article", "create_request_schema.json")
+    url = ArticleEndpoint.create()
+
+    response = strapi_api.post(url, payload=payload)
+    teardown_article.append(response.json()["data"]["documentId"])
+
+    validate.status.created(response)
