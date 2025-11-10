@@ -72,7 +72,6 @@ def test_delete_article_empty_auth_header(strapi_api, setup_teardown_article):
 @pytest.mark.negative
 @pytest.mark.functional
 @pytest.mark.regression
-@pytest.mark.bug
 @pytest.mark.xfail(reason="BUG: Strapi devuelve 204 en vez de 404 al eliminar un documentId inexistente", strict=False)
 def test_delete_article_nonexistent(strapi_api):
     url = ArticleEndpoint.delete("aasaqw7878")
