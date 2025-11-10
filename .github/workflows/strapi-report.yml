@@ -29,33 +29,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Pytest with Allure
+      - name: Run Tests
         run: |
-          pytest -m "functional" --alluredir=allure-results
+          pytest --alluredir=allure-results
         continue-on-error: true
 
-      - name: Download Allure CLI
-        run: |
-          wget https://github.com/allure-framework/allure2/releases/download/2.25.0/allure-2.25.0.tgz
-          tar -xvzf allure-2.25.0.tgz
-          sudo mv allure-2.25.0/bin/allure /usr/bin/allure
-          allure --version
-
-      - name: Generate Allure Report
-        run: |
-          allure generate allure-results -o allure-report --clean
-
-      - name: Checkout GitHub Pages branch
+      - name: Get Allure history
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: allure-history
         continue-on-error: true
 
-      - name: Deploy report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Deploy report to Github Pages
         if: always()
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_PAT }}
-          publish_dir: allure-report
           publish_branch: gh-pages
+          publish_dir: allure-report
