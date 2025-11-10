@@ -185,3 +185,23 @@ def test_list_categories_filter_name_and_slug(strapi_api, module_category):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_count_equals(response, 1)
+
+
+# ============================================================
+# TC-CA-12 - Operador OR ($or)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_or(strapi_api, module_category, category_factory):
+    second = category_factory()
+    params = {
+        "filters[$or][0][name][$eq]": module_category["name"],
+        "filters[$or][1][slug][$eq]": second["slug"]
+    }
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, module_category["documentId"])
+    validate.data.list_contains_document_id(response, second["documentId"])
