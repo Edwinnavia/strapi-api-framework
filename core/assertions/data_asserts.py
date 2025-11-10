@@ -206,3 +206,14 @@ class DataValidator:
         nested = item.get(parent_field)
         assert isinstance(nested, list), f"Expected '{parent_field}' to be a list"
         assert len(nested) > 0, f"Expected '{parent_field}' list to be non-empty"
+
+    def item_field_greater_than(self, response, document_id: str, field: str, min_value):
+        item = self._find_item(response, document_id)
+
+        actual = item.get(field)
+        assert actual is not None, f"Field '{field}' not found for documentId {document_id}"
+        assert actual > min_value, (
+            f"Expected '{field}' > {min_value}, but got {actual}"
+        )
+
+        self._log("info", f"Field '{field}' is greater than {min_value} as expected.")

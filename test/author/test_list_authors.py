@@ -294,3 +294,21 @@ def test_list_authors_filter_and_sort(strapi_api, module_author):
     validate.schema.validate_response(response, "author", "list_response_schema.json")
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.list_is_sorted_by(response, field="createdAt", order="asc")
+
+
+# ============================================================
+# TC-AU-17 - Filter by ID greater than ($gt)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_id_gt(strapi_api, module_author):
+    params = {"filters[id][$gt]": module_author["id"] - 1}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+
+    validate.data.item_field_greater_than(response, module_author["documentId"], field="id",
+                                          min_value=module_author["id"] - 1)
