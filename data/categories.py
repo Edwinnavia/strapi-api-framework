@@ -3,7 +3,7 @@ from faker import Faker
 fake = Faker()
 
 
-def generate_category_payload(name=None, slug=None, description=None, articles=None):
+def generate_category_payload(name=None, slug=None, description="__AUTO__", articles=None):
     final_name = name or fake.word().capitalize()
     final_slug = slug or final_name.lower().replace(" ", "-")
 
@@ -11,9 +11,13 @@ def generate_category_payload(name=None, slug=None, description=None, articles=N
         "data": {
             "name": final_name,
             "slug": final_slug,
-            "description": description or fake.sentence(nb_words=6)
         }
     }
+
+    if description == "__AUTO__":
+        payload["data"]["description"] = fake.sentence(nb_words=6)
+    else:
+        payload["data"]["description"] = description
 
     if articles is not None:
         payload["data"]["articles"] = {

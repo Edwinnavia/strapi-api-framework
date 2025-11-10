@@ -112,6 +112,7 @@ def test_list_categories_filter_exact_name(strapi_api, module_category):
     response = strapi_api.get(url)
 
     validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_category["documentId"])
 
@@ -128,4 +129,24 @@ def test_list_categories_filter_contains_name(strapi_api, module_category):
     response = strapi_api.get(url)
 
     validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_contains_document_id(response, module_category["documentId"])
+
+
+# ============================================================
+# TC-CA-09 - Description nula ($null)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_description_null(strapi_api, category_factory):
+    payload = generate_category_payload(description=None)
+    category = category_factory(payload)
+
+    params = {"filters[description][$null]": "true"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.item_field_is_null(response, category["documentId"], "description")
+

@@ -44,12 +44,7 @@
         "required": [
           "id",
           "documentId",
-          "name",
-          "slug",
-          "description",
-          "createdAt",
-          "updatedAt",
-          "publishedAt"
+          "name"
         ]
       }
     },
