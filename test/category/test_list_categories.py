@@ -271,3 +271,18 @@ def test_list_categories_filter_slug_ends_with(strapi_api, category_factory):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_contains_document_id(response, category["documentId"])
+
+
+# ============================================================
+# TC-CA-17 - Orden por updatedAt
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_sorted_by_updated_at(strapi_api):
+    params = {"sort": "updatedAt:asc"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_is_sorted_by(response, field="updatedAt", order="asc")
