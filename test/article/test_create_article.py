@@ -58,3 +58,34 @@ def test_create_article_empty_description(strapi_api, teardown_article):
     teardown_article.append(response.json()["data"]["documentId"])
 
     validate.status.created(response)
+
+
+# ============================================================
+# TC-CA-04 - Create article as draft (publishedAt null)
+# BUG: Strapi incorrectly publishes articles with publishedAt=None
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+@pytest.mark.regression
+@pytest.mark.bug
+@pytest.mark.xfail(reason="BUG: Strapi publica artículos aunque publishedAt=None y status='draft'", strict=False)
+def test_create_article_draft_with_null_publishedAt(strapi_api, teardown_article):
+    payload = generate_article_payload()
+    payload["data"]["publishedAt"] = None
+    payload["status"] = "draft"
+
+    url = ArticleEndpoint.create()
+    response = strapi_api.post(url, payload=payload)
+
+    data = response.json()["data"]
+    teardown_article.append(data["documentId"])
+
+    validate.status.created(response)
+    validate.schema.validate_response(response, "article", "create_response_schema.json")
+
+    list_params = {"status": "published"}
+    list_url = ArticleEndpoint.get_all(list_params)
+    list_response = strapi_api.get(list_url)
+
+    validate.status.ok(list_response)
+    validate.data.list_not_contains_document_id(list_response, data["documentId"])
