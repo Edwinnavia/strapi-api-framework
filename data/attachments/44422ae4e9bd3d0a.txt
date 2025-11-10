@@ -1,0 +1,10 @@
+2025-11-10 19:30:42 | INFO | strapi_api | [GET] https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?filters%5B%24and%5D%5B0%5D%5Bname%5D%5B%24eq%5D=Opportunity&filters%5B%24and%5D%5B1%5D%5Bslug%5D%5B%24eq%5D=opportunity | Params: None | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer e9a8d0f1e219fd7b3b23a4cab768dd050860ca917cd0560d9f56f3c54b24d420878de876c6ef4ff50016e1eb556cadbb2bc65919edd572a2e4fcd978fd9ad5a7c578282397f577223f0ec283db0c6315053a7028fcb390e63db634fd9f62fafacbd83d42b08989df2767dc45f99331b13cc8c7cedd2aa9707c70c0f3ce472b6e'}
+2025-11-10 19:30:42 | INFO | strapi_api | → Response [GET 200]: {"data":[{"id":321,"documentId":"t8mu4kwjkzedg79jkqjdyqaq","name":"Opportunity","slug":"opportunity","description":"Buy new name everybody.","createdAt":"2025-11-10T19:30:38.339Z","updatedAt":"2025-11...
+2025-11-10 19:30:42 | INFO | validation_manager | Validating status code 200 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?filters%5B%24and%5D%5B0%5D%5Bname%5D%5B%24eq%5D=Opportunity&filters%5B%24and%5D%5B1%5D%5Bslug%5D%5B%24eq%5D=opportunity
+2025-11-10 19:30:42 | INFO | validation_manager |  Status code 200 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/categories?filters%5B%24and%5D%5B0%5D%5Bname%5D%5B%24eq%5D=Opportunity&filters%5B%24and%5D%5B1%5D%5Bslug%5D%5B%24eq%5D=opportunity
+2025-11-10 19:30:42 | INFO | validation_manager | Validating response JSON against 'list_response_schema.json'
+2025-11-10 19:30:42 | INFO | validation_manager | Loaded schema: list_response_schema.json
+2025-11-10 19:30:42 | INFO | validation_manager | JSON schema validation passed: list_response_schema.json
+2025-11-10 19:30:42 | INFO | validation_manager | Checking if list contains documentId 't8mu4kwjkzedg79jkqjdyqaq'...
+2025-11-10 19:30:42 | INFO | validation_manager | Extracting JSON from response...
+2025-11-10 19:30:42 | INFO | validation_manager | documentId 't8mu4kwjkzedg79jkqjdyqaq' found successfully.
