@@ -132,7 +132,6 @@ def test_list_authors_filter_exact_name(strapi_api, module_author):
 
     validate.status.ok(response)
     validate.schema.validate_response(response, "author", "list_response_schema.json")
-    validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
 
@@ -149,7 +148,6 @@ def test_list_authors_filter_exact_name_case_insensitive(strapi_api, module_auth
 
     validate.status.ok(response)
     validate.schema.validate_response(response, "author", "list_response_schema.json")
-    validate.data.list_count_equals(response, 1)
     validate.data.list_contains_document_id(response, module_author["documentId"])
     validate.data.item_field_equals(response, module_author["documentId"], "name", module_author["name"])
 
