@@ -24,7 +24,6 @@ class StatusValidator:
             assert response.text, "Expected non-empty response body, but got empty."
             self._log("debug", "Response body is not empty.")
 
-
     def ok(self, response):
         self._validate(response, 200)
 
@@ -45,6 +44,9 @@ class StatusValidator:
 
     def not_found(self, response):
         self._validate(response, 404)
+
+    def method_not_allowed(self, response):
+        self._validate(response, 405)
 
     def unprocessable_entity(self, response):
         self._validate(response, 422)
