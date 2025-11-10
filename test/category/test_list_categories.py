@@ -99,3 +99,18 @@ def test_list_categories_sorted_by_created_desc(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_is_sorted_by(response, field="createdAt", order="desc")
+
+
+# ============================================================
+# TC-CA-07 - Filtrar por nombre exacto ($eq)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_exact_name(strapi_api, module_category):
+    params = {"filters[name][$eq]": module_category["name"]}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.data.list_count_equals(response, 1)
+    validate.data.list_contains_document_id(response, module_category["documentId"])
