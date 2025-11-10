@@ -368,3 +368,17 @@ def test_list_categories_page_decimal(strapi_api):
 
     validate.status.bad_request(response)
 
+
+# ============================================================
+# TC-CA-23 - pagination[pageSize] decimal (BUG)
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi maneja mal decimal", strict=False)
+def test_list_categories_page_size_decimal(strapi_api):
+    params = {"pagination[pageSize]": "10.7"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
