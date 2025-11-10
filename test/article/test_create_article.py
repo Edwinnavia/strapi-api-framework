@@ -209,7 +209,6 @@ def test_create_article_missing_title(strapi_api):
 @pytest.mark.functional
 def test_create_article_numeric_title(strapi_api):
     payload = generate_article_payload(title=132)
-    print(payload)
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
 
