@@ -382,3 +382,16 @@ def test_list_categories_page_size_decimal(strapi_api):
 
     validate.status.bad_request(response)
 
+
+# ============================================================
+# TC-CA-24 - pagination[page] negativo (BUG)
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi no valida números negativos", strict=False)
+def test_list_categories_page_negative(strapi_api):
+    params = {"pagination[page]": "-1"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
