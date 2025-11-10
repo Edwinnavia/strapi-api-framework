@@ -55,3 +55,12 @@ def module_category(strapi_api, module_article_session):
     yield result["data"]
 
     CategoryHooks.after_delete(strapi_api, document_id)
+
+
+@pytest.fixture
+def teardown_category(strapi_api):
+    created_ids = []
+    yield created_ids
+
+    for document_id in created_ids:
+        CategoryHooks.after_delete(strapi_api, document_id)
