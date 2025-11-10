@@ -205,3 +205,20 @@ def test_list_categories_filter_or(strapi_api, module_category, category_factory
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_contains_document_id(response, module_category["documentId"])
     validate.data.list_contains_document_id(response, second["documentId"])
+
+
+# ============================================================
+# TC-CA-13 - Operador AND ($and)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_and(strapi_api, module_category):
+    params = {
+        "filters[$and][0][name][$eq]": module_category["name"],
+        "filters[$and][1][slug][$eq]": module_category["slug"],
+    }
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.data.list_contains_document_id(response, module_category["documentId"])
