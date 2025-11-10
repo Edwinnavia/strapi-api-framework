@@ -36,10 +36,10 @@ def setup_teardown_category(category_factory):
 
 
 @pytest.fixture(scope="module")
-def module_category(strapi_api, module_article):
+def module_category(strapi_api, module_article_session):
     payload = generate_category_payload(
         articles=[
-            {"documentId": module_article["documentId"]}
+            {"documentId": module_article_session["documentId"]}
         ]
     )
 

@@ -1,5 +1,5 @@
 import pytest
-import time
+from datetime import datetime, timezone
 from main.endpoints.article_endpoint import ArticleEndpoint
 from main.validation_manager import ValidationManager
 from data.articles import generate_article_payload
@@ -89,3 +89,22 @@ def test_create_article_draft_with_null_publishedAt(strapi_api, teardown_article
 
     validate.status.ok(list_response)
     validate.data.list_not_contains_document_id(list_response, data["documentId"])
+
+
+# ============================================================
+# TC-CA-06 - Create article with valid author and category
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_create_article_with_author_and_category(strapi_api, teardown_article, module_author_session,
+                                                 module_category_session):
+    payload = generate_article_payload(author=module_author_session["id"], category=module_category_session["id"])
+    validate.schema.validate_payload(payload, "article", "create_request_schema.json")
+
+    url = ArticleEndpoint.create()
+    response = strapi_api.post(url, payload=payload)
+    data = response.json()["data"]
+    teardown_article.append(data["documentId"])
+
+    validate.status.created(response)
+    validate.schema.validate_response(response, "article", "create_response_schema.json")

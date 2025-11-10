@@ -13,34 +13,42 @@ from data.authors import generate_author_payload
 def strapi_api():
     return StrapiApi()
 
-
 @pytest.fixture(scope="session")
-def module_article(strapi_api):
+def module_article_session(strapi_api):
     payload = generate_article_payload(author=1)
     response = ArticleHooks.before_create(strapi_api, payload)
-    data = response.json()["data"]
+
+    try:
+        data = response.json()["data"]
+    except ValueError:
+        pytest.fail("Invalid JSON response creating module article")
+
     yield data
     ArticleHooks.after_delete(strapi_api, data["documentId"])
 
 
 @pytest.fixture(scope="session")
-def module_author(strapi_api, module_article):
+def module_author_session(strapi_api, module_article_session):
     payload = generate_author_payload(
-        articles=[module_article["documentId"]],
+        articles=[module_article_session["documentId"]],
         avatar=7
     )
+
     response = AuthorHooks.before_create(strapi_api, payload)
-    data = response.json()["data"]
+
+    try:
+        data = response.json()["data"]
+    except ValueError:
+        pytest.fail("Invalid JSON response creating module author")
+
     yield data
     AuthorHooks.after_delete(strapi_api, data["documentId"])
 
 
 @pytest.fixture(scope="session")
-def module_category(strapi_api, module_article):
+def module_category_session(strapi_api, module_article_session):
     payload = generate_category_payload(
-        articles=[
-            {"documentId": module_article["documentId"]}
-        ]
+        articles=[{"documentId": module_article_session["documentId"]}]
     )
 
     response = CategoryHooks.before_create(strapi_api, payload)
@@ -48,7 +56,7 @@ def module_category(strapi_api, module_article):
     try:
         result = response.json()
     except ValueError:
-        pytest.fail("Invalid JSON response while creating module category")
+        pytest.fail("Invalid JSON response creating module category")
 
     document_id = result["data"]["documentId"]
 

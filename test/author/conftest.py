@@ -36,9 +36,9 @@ def setup_teardown_author(author_factory):
 
 
 @pytest.fixture(scope="module")
-def module_author(strapi_api, module_article):
+def module_author(strapi_api, module_article_session):
     payload = generate_author_payload(
-        articles=[module_article["documentId"]]
+        articles=[module_article_session["documentId"]]
     )
 
     response = AuthorHooks.before_create(strapi_api, payload)
