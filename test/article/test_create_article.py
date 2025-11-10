@@ -128,3 +128,24 @@ def test_create_article_slug_format(strapi_api, teardown_article):
     validate.status.created(response)
     validate.schema.validate_response(response, "article", "create_response_schema.json")
     validate.data.item_field_equals_response(response, "slug", "valid-slug-format")
+
+# ============================================================
+# TC-CA-08 - Create article with valid title length
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_create_article_valid_title_length(strapi_api, teardown_article):
+    title = "A" * 150
+    payload = generate_article_payload(title=title)
+
+    validate.schema.validate_payload(payload, "article", "create_request_schema.json")
+
+    url = ArticleEndpoint.create()
+    response = strapi_api.post(url, payload=payload)
+    data = response.json()["data"]
+
+    teardown_article.append(data["documentId"])
+
+    validate.status.created(response)
+    validate.schema.validate_response(response, "article", "create_response_schema.json")
+    validate.data.item_field_equals_response(response, "title", title)
