@@ -53,3 +53,11 @@ def module_author(strapi_api, module_article_session):
     yield result["data"]
 
     AuthorHooks.after_delete(strapi_api, document_id)
+
+@pytest.fixture
+def teardown_author(strapi_api):
+    created_ids = []
+    yield created_ids
+
+    for document_id in created_ids:
+        AuthorHooks.after_delete(strapi_api, document_id)
