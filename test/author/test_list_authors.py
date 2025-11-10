@@ -352,3 +352,18 @@ def test_list_authors_page_string(strapi_api):
 
     validate.status.bad_request(response)
 
+
+# ============================================================
+# TC-AU-20 - pagination[pageSize] negative value (BUG)
+# ID: TC-AU-20 | Name: Invalid negative pageSize
+# ============================================================
+@pytest.mark.list_authors
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi does not validate negative pageSize", strict=False)
+def test_list_authors_page_size_negative(strapi_api):
+    params = {"pagination[pageSize]": -1}
+    url = AuthorEndpoint.get_all(params)
+
+    response = strapi_api.get(url)
+    validate.status.bad_request(response)
