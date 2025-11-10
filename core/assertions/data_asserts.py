@@ -217,3 +217,11 @@ class DataValidator:
         )
 
         self._log("info", f"Field '{field}' is greater than {min_value} as expected.")
+
+    def items_field_contains(self, response, field: str, substring: str):
+        items = self._get_items(response)
+        for item in items:
+            value = item.get(field)
+            assert substring.lower() in value.lower(), (
+                f"Expected '{substring}' in field '{field}', but got '{value}'."
+            )

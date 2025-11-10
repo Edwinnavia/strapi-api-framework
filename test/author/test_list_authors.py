@@ -312,3 +312,26 @@ def test_list_authors_filter_id_gt(strapi_api, module_author):
 
     validate.data.item_field_greater_than(response, module_author["documentId"], field="id",
                                           min_value=module_author["id"] - 1)
+
+
+# ============================================================
+# TC-AU-18 - Combined pagination + filters + sorting
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_combined_params(strapi_api):
+    params = {
+        "pagination[pageSize]": 10,
+        "filters[name][$contains]": "a",
+        "sort": "createdAt:desc",
+    }
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.pagination_exists(response)
+    validate.data.pagination_value_equals(response, "pageSize", 10)
+    validate.data.list_not_empty(response)
+    validate.data.list_is_sorted_by(response, field="createdAt", order="desc")
+    validate.data.items_field_contains(response, field="name", substring="a")
