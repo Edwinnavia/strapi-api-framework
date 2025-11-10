@@ -1,4 +1,0 @@
-INFO     strapi_api:strapi_api.py:35 [POST] https://tranquil-compassion-986c2331de.strapiapp.com/api/authors | Payload: {'data': {'name': 'Dawn', 'email': 'brianna67@example.com'}} | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}
-INFO     strapi_api:strapi_api.py:37 → Response [POST 403]: {"data":null,"error":{"status":403,"name":"ForbiddenError","message":"Forbidden","details":{}}}...
-INFO     validation_manager:status_asserts.py:10 Validating status code 403 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/authors
-INFO     validation_manager:status_asserts.py:10  Status code 403 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/authors
