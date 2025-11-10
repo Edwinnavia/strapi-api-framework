@@ -1,4 +1,0 @@
-2025-11-10 18:51:49 | INFO | strapi_api | [POST] https://tranquil-compassion-986c2331de.strapiapp.com/api/authors | Payload: {'data': {'name': 'Taylor', 'email': 'coopermatthew@example.net'}} | Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer INVALID123'}
-2025-11-10 18:51:49 | INFO | strapi_api | → Response [POST 401]: {"data":null,"error":{"status":401,"name":"UnauthorizedError","message":"Missing or invalid credentials","details":{}}}...
-2025-11-10 18:51:49 | INFO | validation_manager | Validating status code 401 for URL: https://tranquil-compassion-986c2331de.strapiapp.com/api/authors
-2025-11-10 18:51:49 | INFO | validation_manager |  Status code 401 validated successfully for https://tranquil-compassion-986c2331de.strapiapp.com/api/authors
