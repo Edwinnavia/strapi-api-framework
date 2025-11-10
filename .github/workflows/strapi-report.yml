@@ -1,10 +1,20 @@
-name: Allure Report
+name: Pytest + Allure Report
 
 on:
   push:
-    branches: [ development ]
+    branches: [development]
   pull_request:
-    branches: [ development ]
+    branches: [development]
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Tipo de test (default, api, login, etc)'
+        required: false
+        default: ''
+      marker:
+        description: 'Marker opcional (e.g. smoke, regression)'
+        required: false
+        default: ''
 
 jobs:
   autotests:
@@ -29,9 +39,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run Pytest with optional marker
         run: |
-          pytest --alluredir=allure-results
+          echo "Running tests..."
+          CMD="pytest --alluredir=allure-results"
+
+          if [ -n "${{ github.event.inputs.marker }}" ]; then
+            CMD="$CMD -m '${{ github.event.inputs.marker }}'"
+          fi
+
+          echo "Executing: $CMD"
+          eval $CMD
         continue-on-error: true
 
       - name: Get Allure history
@@ -41,7 +59,7 @@ jobs:
           path: allure-history
         continue-on-error: true
 
-      - name: Allure Report action from marketplace
+      - name: Build Allure report
         uses: simple-elf/allure-report-action@v1.7
         with:
           allure_results: allure-results
@@ -55,3 +73,10 @@ jobs:
           github_token: ${{ secrets.GH_PAT }}
           publish_branch: gh-pages
           publish_dir: allure-report
+
+      - name: Upload Allure raw results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
