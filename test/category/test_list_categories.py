@@ -289,7 +289,7 @@ def test_list_categories_sorted_by_updated_at(strapi_api):
 
 
 # ============================================================
-# TC-CA-18 - populate relaciones (aunque no existan)
+# TC-CA-18 - populate relaciones 
 # ============================================================
 @pytest.mark.positive
 @pytest.mark.functional
@@ -306,3 +306,22 @@ def test_list_categories_populate(strapi_api):
         'id', 'publishedAt', 'updatedAt', 'createdAt'
     }
     validate.data.items_only_have_fields(response, allowed_fields=allowed)
+
+
+# ============================================================
+# TC-CA-21 - Combo fields + filters + sort
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_combined_fields_filters_sort(strapi_api, module_category):
+    params = {
+        "fields[0]": "name",
+        "filters[name][$eq]": module_category["name"],
+        "sort": "createdAt:asc",
+    }
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.items_all_have_fields(response, {"name"})
