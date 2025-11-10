@@ -28,6 +28,9 @@ class StatusValidator:
     def ok(self, response):
         self._validate(response, 200)
 
+    def created(self, response):
+        self._validate(response, 201)
+
     def no_content(self, response):
         self._validate(response, 204)
 

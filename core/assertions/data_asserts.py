@@ -225,3 +225,34 @@ class DataValidator:
             assert substring.lower() in value.lower(), (
                 f"Expected '{substring}' in field '{field}', but got '{value}'."
             )
+
+    def item_field_equals_response(self, response, field, expected):
+        self._log("info", f"Validating field '{field}' equals '{expected}' at root data level")
+        response_json = self._extract_json(response)
+        data = response_json.get("data", {})
+
+        actual = data.get(field)
+        assert actual == expected, f"Expected {field}={expected}, got {actual}"
+
+        self._log("info", f"Field '{field}' equals expected value")
+
+    def nested_field_equals_response(self, response, parent_field, child_field, expected_value):
+        self._log("info", f"Validating nested field '{parent_field}.{child_field}' equals '{expected_value}'")
+        response_json = self._extract_json(response)
+        parent = response_json.get("data", {}).get(parent_field, {})
+
+        actual = parent.get(child_field)
+        assert actual == expected_value, (
+            f"Expected {parent_field}.{child_field}={expected_value}, got {actual}"
+        )
+
+        self._log("info", f"Nested field '{parent_field}.{child_field}' validated successfully")
+
+    def item_field_is_null_response(self, response, field):
+        self._log("info", f"Validating field '{field}' is null at root data level")
+        response_json = self._extract_json(response)
+        data = response_json.get("data", {})
+
+        assert data.get(field) is None, f"Expected {field} to be null"
+
+        self._log("info", f"Field '{field}' is null as expected")

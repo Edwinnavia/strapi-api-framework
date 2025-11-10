@@ -1,4 +1,7 @@
 import pytest
+
+from data.categories import generate_category_payload
+from main.hooks.category_hooks import CategoryHooks
 from main.strapi_api import StrapiApi
 from main.hooks.article_hooks import ArticleHooks
 from main.hooks.author_hooks import AuthorHooks
@@ -30,3 +33,25 @@ def module_author(strapi_api, module_article):
     data = response.json()["data"]
     yield data
     AuthorHooks.after_delete(strapi_api, data["documentId"])
+
+
+@pytest.fixture(scope="session")
+def module_category(strapi_api, module_article):
+    payload = generate_category_payload(
+        articles=[
+            {"documentId": module_article["documentId"]}
+        ]
+    )
+
+    response = CategoryHooks.before_create(strapi_api, payload)
+
+    try:
+        result = response.json()
+    except ValueError:
+        pytest.fail("Invalid JSON response while creating module category")
+
+    document_id = result["data"]["documentId"]
+
+    yield result["data"]
+
+    CategoryHooks.after_delete(strapi_api, document_id)

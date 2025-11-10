@@ -50,3 +50,12 @@ def module_article(strapi_api):
     yield result["data"]
 
     ArticleHooks.after_delete(strapi_api, document_id)
+
+
+@pytest.fixture
+def teardown_article(strapi_api):
+    created_ids = []
+    yield created_ids
+
+    for document_id in created_ids:
+        ArticleHooks.after_delete(strapi_api, document_id)
