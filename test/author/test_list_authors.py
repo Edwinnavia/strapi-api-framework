@@ -408,3 +408,14 @@ def test_list_authors_invalid_filter_field(strapi_api):
     validate.status.bad_request(response)
 
 
+# ============================================================
+# TC-AU-24 - invalid operator ignored
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.functional
+def test_list_authors_invalid_operator(strapi_api):
+    params = {"filters[name][$invalid]": "test"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
