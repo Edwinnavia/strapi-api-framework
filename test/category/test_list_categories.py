@@ -339,3 +339,17 @@ def test_list_categories_page_string(strapi_api):
     response = strapi_api.get(url)
 
     validate.status.bad_request(response)
+
+
+# ============================================================
+# TC-CA-21 - pagination[pageSize] string (BUG)
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi retorna 500 para pageSize string", strict=False)
+def test_list_categories_page_size_string(strapi_api):
+    params = {"pagination[pageSize]": "abc"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
