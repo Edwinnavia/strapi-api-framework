@@ -150,3 +150,20 @@ def test_list_categories_filter_description_null(strapi_api, category_factory):
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.item_field_is_null(response, category["documentId"], "description")
 
+
+# ============================================================
+# TC-CA-10 - Description no nula ($notNull)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_description_not_null(strapi_api, category_factory):
+    payload = generate_category_payload(description="Some text")
+    category = category_factory(payload)
+
+    params = {"filters[description][$notNull]": "true"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.item_field_equals(response, category["documentId"], "description", "Some text")
