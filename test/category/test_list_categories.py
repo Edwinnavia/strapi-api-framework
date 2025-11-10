@@ -69,3 +69,18 @@ def test_list_categories_select_specific_fields(strapi_api):
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.items_only_have_fields(response, allowed_fields={"id", "documentId", "name", "slug"})
     validate.data.items_all_have_fields(response, required_fields={"name", "slug"})
+
+
+# ============================================================
+# TC-CA-05 - Orden ascendente por nombre
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_sorted_by_name_asc(strapi_api):
+    params = {"sort": "name:asc"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_is_sorted_by(response, field="name", order="asc")
