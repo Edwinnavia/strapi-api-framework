@@ -84,3 +84,18 @@ def test_list_categories_sorted_by_name_asc(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_is_sorted_by(response, field="name", order="asc")
+
+
+# ============================================================
+# TC-CA-06 - Orden descendente por fecha de creación
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_sorted_by_created_desc(strapi_api):
+    params = {"sort": "createdAt:desc"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_is_sorted_by(response, field="createdAt", order="desc")
