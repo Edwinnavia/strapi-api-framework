@@ -286,3 +286,23 @@ def test_list_categories_sorted_by_updated_at(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_is_sorted_by(response, field="updatedAt", order="asc")
+
+
+# ============================================================
+# TC-CA-18 - populate relaciones (aunque no existan)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_populate(strapi_api):
+    params = {"populate": "articles"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_not_empty(response)
+    allowed = {
+        'articles', 'description', 'documentId', 'name', 'slug',
+        'id', 'publishedAt', 'updatedAt', 'createdAt'
+    }
+    validate.data.items_only_have_fields(response, allowed_fields=allowed)
