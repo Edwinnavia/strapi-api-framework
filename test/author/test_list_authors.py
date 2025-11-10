@@ -364,6 +364,22 @@ def test_list_authors_page_string(strapi_api):
 def test_list_authors_page_size_negative(strapi_api):
     params = {"pagination[pageSize]": -1}
     url = AuthorEndpoint.get_all(params)
-
     response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
+
+# ============================================================
+# TC-AU-21 - pagination[pageSize] string (BUG)
+# ID: TC-AU-21 | Name: Invalid pageSize type (string)
+# ============================================================
+@pytest.mark.list_authors
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi returns 500 when pageSize is text", strict=False)
+def test_list_authors_page_size_string(strapi_api):
+    params = {"pagination[pageSize]": "uno"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
     validate.status.bad_request(response)
