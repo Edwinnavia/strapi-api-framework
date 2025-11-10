@@ -37,3 +37,19 @@ def test_list_categories_default_pagination(strapi_api):
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.pagination_value_equals(response, "page", 1)
     validate.data.pagination_value_equals(response, "pageSize", 25)
+
+
+# ============================================================
+# TC-CA-03 - Paginación personalizada válida
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_custom_pagination(strapi_api):
+    params = {"pagination[page]": 2, "pagination[pageSize]": 5}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.pagination_value_equals(response, "page", 2)
+    validate.data.pagination_value_equals(response, "pageSize", 5)
