@@ -165,3 +165,21 @@ def test_create_article_description_exceeds_max_length(strapi_api, teardown_arti
     response = strapi_api.post(url, payload=payload)
     validate.status.bad_request(response)
 
+
+# ============================================================
+# TC-CA-10 - Create article with single category connected
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_create_article_single_category(strapi_api, teardown_article, module_category_session):
+    payload = generate_article_payload(category=module_category_session["id"])
+    validate.schema.validate_payload(payload, "article", "create_request_schema.json")
+
+    url = ArticleEndpoint.create()
+    response = strapi_api.post(url, payload=payload)
+
+    data = response.json()["data"]
+    teardown_article.append(data["documentId"])
+
+    validate.status.created(response)
+    validate.schema.validate_response(response, "article", "create_response_schema.json")
