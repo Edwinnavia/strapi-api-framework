@@ -275,3 +275,22 @@ def test_list_authors_populate_and_fields(strapi_api):
     validate.data.items_only_have_fields(response, allowed_fields=allowed)
     required = {"name", "email"}
     validate.data.items_all_have_fields(response, required_fields=required)
+
+
+# ============================================================
+# TC-AU-16 - Filter by name AND sort by createdAt ASC
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_authors_filter_and_sort(strapi_api, module_author):
+    params = {
+        "filters[name][$eq]": module_author["name"],
+        "sort": "createdAt:asc"
+    }
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "author", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, module_author["documentId"])
+    validate.data.list_is_sorted_by(response, field="createdAt", order="asc")
