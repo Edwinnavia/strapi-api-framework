@@ -11,13 +11,22 @@
           "type": "string"
         },
         "name": {
-          "type": "string"
+          "type": [
+              "string",
+              "null"
+            ]
         },
         "slug": {
-          "type": "string"
+          "type": [
+              "string",
+              "null"
+            ]
         },
         "description": {
-          "type": "string"
+          "type": [
+              "string",
+              "null"
+            ]
         },
         "createdAt": {
           "type": "string"

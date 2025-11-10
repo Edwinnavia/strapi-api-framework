@@ -5,13 +5,22 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "type": [
+              "string",
+              "null"
+            ]
         },
         "slug": {
-          "type": "string"
+           "type": [
+              "string",
+              "null"
+            ]
         },
         "description": {
-          "type": "string"
+           "type": [
+              "string",
+              "null"
+            ]
         },
         "articles": {
           "type": "object",

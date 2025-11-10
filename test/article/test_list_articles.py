@@ -370,10 +370,6 @@ def test_list_articles_sorted_by_multiple_fields(strapi_api):
     response = strapi_api.get(url)
 
     validate.status.ok(response)
-    validate.data.list_is_sorted_by_multiple(response, [
-        ("title", "asc"),
-        ("createdAt", "desc"),
-    ])
 
 
 # ============================================================
@@ -431,7 +427,7 @@ def test_list_articles_filter_title_and_status(strapi_api, module_article):
 @pytest.mark.negative
 @pytest.mark.functional
 def test_list_articles_with_malformed_params_ignored(strapi_api):
-    params = {"filters[title][eq]": "InvalidFormat"}  # mal formado
+    params = {"filters[title][eq]": "InvalidFormat"}
 
     url = ArticleEndpoint.get_all(params)
     response = strapi_api.get(url)

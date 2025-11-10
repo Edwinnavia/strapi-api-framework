@@ -11,7 +11,10 @@
             "type": "integer"
           },
           "documentId": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "title": {
             "type": "string"

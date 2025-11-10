@@ -30,9 +30,10 @@ def article_factory(strapi_api):
 
 
 @pytest.fixture
-def setup_teardown_article(article_factory):
+def setup_teardown_article(article_factory, teardown_article):
     article = article_factory()
-    yield article
+    teardown_article.append(article["documentId"])
+    return article
 
 
 @pytest.fixture(scope="module")
