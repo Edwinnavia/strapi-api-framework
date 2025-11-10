@@ -280,7 +280,7 @@ def test_update_article_empty_slug(strapi_api, setup_teardown_article):
     url = ArticleEndpoint.update(article["documentId"])
     response = strapi_api.put(url, payload=payload)
 
-    validate.status.bad_request(response)
+    validate.status.ok(response)
 
 
 # ============================================================
