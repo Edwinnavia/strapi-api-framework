@@ -167,3 +167,21 @@ def test_list_categories_filter_description_not_null(strapi_api, category_factor
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.item_field_equals(response, category["documentId"], "description", "Some text")
+
+
+# ============================================================
+# TC-CA-11 - Filtros múltiples (name + slug)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_name_and_slug(strapi_api, module_category):
+    params = {
+        "filters[name][$eq]": module_category["name"],
+        "filters[slug][$eq]": module_category["slug"],
+    }
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_count_equals(response, 1)
