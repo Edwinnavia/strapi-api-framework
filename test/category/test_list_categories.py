@@ -254,3 +254,20 @@ def test_list_categories_filter_slug_starts_with(strapi_api, category_factory):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_contains_document_id(response, category["documentId"])
+
+
+# ============================================================
+# TC-CA-16 - slug termina con ($endsWith)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_slug_ends_with(strapi_api, category_factory):
+    category = category_factory(generate_category_payload(slug="end_this_correctly"))
+    params = {"filters[slug][$endsWith]": "correctly"}
+
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, category["documentId"])
