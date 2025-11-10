@@ -238,3 +238,19 @@ def test_list_categories_with_count(strapi_api):
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.pagination_has_keys(response, ["total", "pageCount"])
+
+
+# ============================================================
+# TC-CA-15 - slug inicia con ($startsWith)
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_filter_slug_starts_with(strapi_api, category_factory):
+    category = category_factory(generate_category_payload(slug="start_here_now"))
+    params = {"filters[slug][$startsWith]": "start_"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.list_contains_document_id(response, category["documentId"])
