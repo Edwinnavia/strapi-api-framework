@@ -221,4 +221,20 @@ def test_list_categories_filter_and(strapi_api, module_category):
     response = strapi_api.get(url)
 
     validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.list_contains_document_id(response, module_category["documentId"])
+
+
+# ============================================================
+# TC-CA-14 - withCount=true
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_list_categories_with_count(strapi_api):
+    params = {"pagination[withCount]": "true"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+    validate.schema.validate_response(response, "category", "list_response_schema.json")
+    validate.data.pagination_has_keys(response, ["total", "pageCount"])
