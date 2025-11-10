@@ -341,7 +341,6 @@ def test_list_authors_combined_params(strapi_api):
 # TC-AU-19 - pagination[page] as string (BUG)
 # ID: TC-AU-19 | Name: Invalid page type (string)
 # ============================================================
-@pytest.mark.list_authors
 @pytest.mark.negative
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi returns 500 when pagination[page] is a string", strict=False)
@@ -357,7 +356,6 @@ def test_list_authors_page_string(strapi_api):
 # TC-AU-20 - pagination[pageSize] negative value (BUG)
 # ID: TC-AU-20 | Name: Invalid negative pageSize
 # ============================================================
-@pytest.mark.list_authors
 @pytest.mark.negative
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi does not validate negative pageSize", strict=False)
@@ -373,7 +371,6 @@ def test_list_authors_page_size_negative(strapi_api):
 # TC-AU-21 - pagination[pageSize] string (BUG)
 # ID: TC-AU-21 | Name: Invalid pageSize type (string)
 # ============================================================
-@pytest.mark.list_authors
 @pytest.mark.negative
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi returns 500 when pageSize is text", strict=False)
@@ -383,3 +380,18 @@ def test_list_authors_page_size_string(strapi_api):
     response = strapi_api.get(url)
 
     validate.status.bad_request(response)
+
+
+# ============================================================
+# TC-AU-22 - malformed filter key ignored
+# ID: TC-AU-22 | Name: Malformed filter should be ignored
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.functional
+def test_list_authors_malformed_filter(strapi_api):
+    params = {"filters[name][$eq": "test"}  # missing bracket
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.ok(response)
+
