@@ -384,14 +384,27 @@ def test_list_authors_page_size_string(strapi_api):
 
 # ============================================================
 # TC-AU-22 - malformed filter key ignored
-# ID: TC-AU-22 | Name: Malformed filter should be ignored
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
 def test_list_authors_malformed_filter(strapi_api):
-    params = {"filters[name][$eq": "test"}  # missing bracket
+    params = {"filters[name][$eq": "test"}
     url = AuthorEndpoint.get_all(params)
     response = strapi_api.get(url)
 
     validate.status.ok(response)
+
+
+# ============================================================
+# TC-AU-23 - invalid filter field ignored
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.functional
+def test_list_authors_invalid_filter_field(strapi_api):
+    params = {"filters[abc]": "123"}
+    url = AuthorEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
+
 
