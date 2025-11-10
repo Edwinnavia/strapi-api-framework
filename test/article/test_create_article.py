@@ -108,3 +108,23 @@ def test_create_article_with_author_and_category(strapi_api, teardown_article, m
 
     validate.status.created(response)
     validate.schema.validate_response(response, "article", "create_response_schema.json")
+
+
+# ============================================================
+# TC-CA-07 - Create article with valid slug format
+# ============================================================
+@pytest.mark.positive
+@pytest.mark.functional
+def test_create_article_slug_format(strapi_api, teardown_article):
+    payload = generate_article_payload(slug="valid-slug-format")
+    validate.schema.validate_payload(payload, "article", "create_request_schema.json")
+
+    url = ArticleEndpoint.create()
+    response = strapi_api.post(url, payload=payload)
+    data = response.json()["data"]
+
+    teardown_article.append(data["documentId"])
+
+    validate.status.created(response)
+    validate.schema.validate_response(response, "article", "create_response_schema.json")
+    validate.data.item_field_equals_response(response, "slug", "valid-slug-format")
