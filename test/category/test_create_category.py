@@ -291,7 +291,7 @@ def test_create_category_empty_articles_connect(strapi_api):
     payload = {"data": {"name": "AAA", "slug": "aaa", "articles": {"connect": []}}}
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
-    validate.status.created(response)
+    validate.status.bad_request(response)
 
 
 # ============================================================
