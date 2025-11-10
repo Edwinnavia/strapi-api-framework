@@ -289,7 +289,7 @@ def test_list_categories_sorted_by_updated_at(strapi_api):
 
 
 # ============================================================
-# TC-CA-18 - populate relaciones 
+# TC-CA-18 - populate relaciones
 # ============================================================
 @pytest.mark.positive
 @pytest.mark.functional
@@ -309,7 +309,7 @@ def test_list_categories_populate(strapi_api):
 
 
 # ============================================================
-# TC-CA-21 - Combo fields + filters + sort
+# TC-CA-19 - Combo fields + filters + sort
 # ============================================================
 @pytest.mark.positive
 @pytest.mark.functional
@@ -325,3 +325,17 @@ def test_list_categories_combined_fields_filters_sort(strapi_api, module_categor
     validate.status.ok(response)
     validate.schema.validate_response(response, "category", "list_response_schema.json")
     validate.data.items_all_have_fields(response, {"name"})
+
+
+# ============================================================
+# TC-CA-20 - pagination[page] string (BUG)
+# ============================================================
+@pytest.mark.negative
+@pytest.mark.regression
+@pytest.mark.xfail(reason="BUG: Strapi retorna 500 para page string", strict=False)
+def test_list_categories_page_string(strapi_api):
+    params = {"pagination[page]": "texto"}
+    url = CategoryEndpoint.get_all(params)
+    response = strapi_api.get(url)
+
+    validate.status.bad_request(response)
