@@ -192,12 +192,20 @@ def test_create_article_single_category(strapi_api, teardown_article, module_cat
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi no valida el campo title como requerido", strict=False)
-def test_create_article_missing_title(strapi_api):
+def test_create_article_missing_title(strapi_api, teardown_article):
     payload = generate_article_payload()
     payload["data"]["title"] = None
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
 
     validate.status.bad_request(response)
 
@@ -207,11 +215,18 @@ def test_create_article_missing_title(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_numeric_title(strapi_api):
+def test_create_article_numeric_title(strapi_api, teardown_article):
     payload = generate_article_payload(title=132)
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -223,13 +238,20 @@ def test_create_article_numeric_title(strapi_api):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi retorna 500 en vez de 400 cuando title es demasiado largo", strict=False)
-def test_create_article_title_too_long(strapi_api):
+def test_create_article_title_too_long(strapi_api, teardown_article):
     long_title = "A" * 500
     payload = generate_article_payload(title=long_title)
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -238,12 +260,19 @@ def test_create_article_title_too_long(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_duplicate_slug(strapi_api, module_article):
+def test_create_article_duplicate_slug(strapi_api, module_article, teardown_article):
     payload = generate_article_payload(slug=module_article["slug"])
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -252,12 +281,19 @@ def test_create_article_duplicate_slug(strapi_api, module_article):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_invalid_slug_format(strapi_api):
+def test_create_article_invalid_slug_format(strapi_api, teardown_article):
     payload = generate_article_payload(slug="Invalid Slug Format")
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -266,12 +302,19 @@ def test_create_article_invalid_slug_format(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_invalid_description_type(strapi_api):
+def test_create_article_invalid_description_type(strapi_api, teardown_article):
     payload = generate_article_payload(description={"invalid": "object"})
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -280,12 +323,19 @@ def test_create_article_invalid_description_type(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_invalid_author(strapi_api):
+def test_create_article_invalid_author(strapi_api, teardown_article):
     payload = generate_article_payload(author=9999999)
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -294,12 +344,19 @@ def test_create_article_invalid_author(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_invalid_category(strapi_api):
+def test_create_article_invalid_category(strapi_api, teardown_article):
     payload = generate_article_payload(category=9999999)
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -308,12 +365,19 @@ def test_create_article_invalid_category(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.security
-def test_create_article_missing_auth_token(strapi_api):
+def test_create_article_missing_auth_token(strapi_api, teardown_article):
     payload = generate_article_payload()
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload, with_auth=False)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.forbidden(response)
 
 
@@ -322,14 +386,21 @@ def test_create_article_missing_auth_token(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.security
-def test_create_article_invalid_token(strapi_api):
+def test_create_article_invalid_token(strapi_api, teardown_article):
     payload = generate_article_payload()
 
     headers = {"Authorization": "Bearer INVALIDTOKEN123"}
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload, headers=headers)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.unauthorized(response)
 
 
@@ -338,12 +409,19 @@ def test_create_article_invalid_token(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_empty_body(strapi_api):
+def test_create_article_empty_body(strapi_api, teardown_article):
     payload = {}
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -352,10 +430,17 @@ def test_create_article_empty_body(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_article_invalid_body_format(strapi_api):
+def test_create_article_invalid_body_format(strapi_api, teardown_article):
     payload = {"title": "Bad format, missing data object"}
 
     url = ArticleEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            document_id = data.get("documentId")
+            if document_id:
+                teardown_article.append(document_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)

@@ -1,7 +1,6 @@
 import pytest
 from main.endpoints.article_endpoint import ArticleEndpoint
 from main.validation_manager import ValidationManager
-from data.articles import generate_article_payload
 
 validate = ValidationManager()
 pytestmark = pytest.mark.delete_article

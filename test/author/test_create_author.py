@@ -200,12 +200,20 @@ def test_create_author_empty_articles_connect(strapi_api, teardown_author):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi permite crear un author con name=None en vez de retornar 400", strict=False)
-def test_create_author_missing_name(strapi_api):
+def test_create_author_missing_name(strapi_api, teardown_author):
     payload = generate_author_payload()
     payload["data"]["name"] = None
 
     url = AuthorEndpoint.create()
     response = strapi_api.post(url, payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
 
     validate.status.bad_request(response)
 
@@ -218,13 +226,20 @@ def test_create_author_missing_name(strapi_api):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi acepta name='' en vez de validar como campo requerido", strict=False)
-def test_create_author_empty_name(strapi_api):
+def test_create_author_empty_name(strapi_api, teardown_author):
     payload = generate_author_payload(name="")
     payload["data"]["name"] = ""
 
     url = AuthorEndpoint.create()
     response = strapi_api.post(url, payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -233,10 +248,18 @@ def test_create_author_empty_name(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_numeric_name(strapi_api):
+def test_create_author_numeric_name(strapi_api, teardown_author):
     payload = generate_author_payload()
     payload["data"]["name"] = 123
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -248,10 +271,18 @@ def test_create_author_numeric_name(strapi_api):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi responde 500 para name demasiado largo, debería retornar 400", strict=False)
-def test_create_author_name_too_long(strapi_api):
+def test_create_author_name_too_long(strapi_api, teardown_author):
     payload = generate_author_payload(name="A" * 500)
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -260,11 +291,19 @@ def test_create_author_name_too_long(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_missing_email(strapi_api):
+def test_create_author_missing_email(strapi_api, teardown_author):
     payload = generate_author_payload()
     payload["data"]["email"] = None
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.created(response)
 
 
@@ -273,10 +312,18 @@ def test_create_author_missing_email(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_empty_email(strapi_api):
+def test_create_author_empty_email(strapi_api, teardown_author):
     payload = generate_author_payload(email="")
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.created(response)
 
 
@@ -288,10 +335,18 @@ def test_create_author_empty_email(strapi_api):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi acepta email inválido 'bademail' en vez de retornar 400", strict=False)
-def test_create_author_invalid_email_format(strapi_api):
+def test_create_author_invalid_email_format(strapi_api, teardown_author):
     payload = generate_author_payload(email="bademail")
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -300,10 +355,18 @@ def test_create_author_invalid_email_format(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_invalid_article_relation(strapi_api):
+def test_create_author_invalid_article_relation(strapi_api, teardown_author):
     payload = generate_author_payload(articles=["nonExisting123"])
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -312,10 +375,18 @@ def test_create_author_invalid_article_relation(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_negative_avatar(strapi_api):
+def test_create_author_negative_avatar(strapi_api, teardown_author):
     payload = generate_author_payload(avatar=-10)
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -324,10 +395,18 @@ def test_create_author_negative_avatar(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_string_avatar(strapi_api):
+def test_create_author_string_avatar(strapi_api, teardown_author):
     payload = generate_author_payload(avatar="lol")
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -336,10 +415,18 @@ def test_create_author_string_avatar(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.security
-def test_create_author_missing_auth(strapi_api):
+def test_create_author_missing_auth(strapi_api, teardown_author):
     payload = generate_author_payload()
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload, with_auth=False)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.forbidden(response)
 
 
@@ -348,11 +435,19 @@ def test_create_author_missing_auth(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.security
-def test_create_author_invalid_token(strapi_api):
+def test_create_author_invalid_token(strapi_api, teardown_author):
     payload = generate_author_payload()
     headers = {"Authorization": "Bearer INVALID123"}
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload, headers=headers)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.unauthorized(response)
 
 
@@ -361,8 +456,16 @@ def test_create_author_invalid_token(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_author_invalid_body_format(strapi_api):
+def test_create_author_invalid_body_format(strapi_api, teardown_author):
     payload = {"name": "Bad format"}
 
     response = strapi_api.post(AuthorEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            author_id = data.get("documentId") or data.get("id")
+            if author_id:
+                teardown_author.append(author_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)

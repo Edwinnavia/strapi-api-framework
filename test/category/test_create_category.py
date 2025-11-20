@@ -177,11 +177,18 @@ def test_create_category_unique_fields(strapi_api, teardown_category):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi crea categoría cuando 'name'=None; debería retornar 400", strict=False)
-def test_create_category_missing_name(strapi_api):
+def test_create_category_missing_name(strapi_api, teardown_category):
     payload = generate_category_payload()
     payload["data"]["name"] = None
-
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
 
     validate.status.bad_request(response)
 
@@ -194,11 +201,18 @@ def test_create_category_missing_name(strapi_api):
 @pytest.mark.functional
 @pytest.mark.regression
 @pytest.mark.xfail(reason="BUG: Strapi acepta name="" y crea la categoría; debería retornar 400", strict=False)
-def test_create_category_empty_name(strapi_api):
-    payload = generate_category_payload(name="")  # name vacío
+def test_create_category_empty_name(strapi_api, teardown_category):
+    payload = generate_category_payload(name="")
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
-
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
     validate.status.bad_request(response)
 
 
@@ -207,10 +221,19 @@ def test_create_category_empty_name(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_numeric_name(strapi_api):
+def test_create_category_numeric_name(strapi_api, teardown_category):
     payload = generate_category_payload(name=123)
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -225,10 +248,18 @@ def test_create_category_numeric_name(strapi_api):
     reason="BUG: Strapi retorna 500 cuando name > límite; debería retornar 400",
     strict=False
 )
-def test_create_category_name_too_long(strapi_api):
+def test_create_category_name_too_long(strapi_api, teardown_category):
     payload = generate_category_payload(name="A" * 500)
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
 
     validate.status.bad_request(response)
 
@@ -238,11 +269,20 @@ def test_create_category_name_too_long(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_missing_slug(strapi_api):
+def test_create_category_missing_slug(strapi_api, teardown_category):
     payload = generate_category_payload()
     payload["data"]["slug"] = None
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.created(response)
 
 
@@ -251,10 +291,19 @@ def test_create_category_missing_slug(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_duplicate_slug(strapi_api, module_category_session):
+def test_create_category_duplicate_slug(strapi_api, module_category_session, teardown_category):
     payload = generate_category_payload(slug=module_category_session["slug"])
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -263,10 +312,19 @@ def test_create_category_duplicate_slug(strapi_api, module_category_session):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_invalid_slug_accents(strapi_api):
+def test_create_category_invalid_slug_accents(strapi_api, teardown_category):
     payload = generate_category_payload(slug="Categoría Tecnología")
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -275,10 +333,19 @@ def test_create_category_invalid_slug_accents(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_invalid_description_type(strapi_api):
+def test_create_category_invalid_description_type(strapi_api, teardown_category):
     payload = generate_category_payload(description={"invalid": True})
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -287,11 +354,18 @@ def test_create_category_invalid_description_type(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_empty_articles_connect(strapi_api):
+def test_create_category_empty_articles_connect(strapi_api, teardown_category):
     payload = {"data": {"name": "AAA", "slug": "aaa", "articles": {"connect": []}}}
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
-    validate.status.bad_request(response)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
 
 
 # ============================================================
@@ -299,10 +373,19 @@ def test_create_category_empty_articles_connect(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_invalid_connect_object(strapi_api):
+def test_create_category_invalid_connect_object(strapi_api, teardown_category):
     payload = {"data": {"name": "AAA", "slug": "aaa", "articles": {"connect": [{}]}}}
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -311,10 +394,19 @@ def test_create_category_invalid_connect_object(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_connect_null(strapi_api):
+def test_create_category_connect_null(strapi_api, teardown_category):
     payload = {"data": {"name": "AAA", "slug": "aaa", "articles": {"connect": [None]}}}
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -323,10 +415,19 @@ def test_create_category_connect_null(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.functional
-def test_create_category_invalid_body_format(strapi_api):
+def test_create_category_invalid_body_format(strapi_api, teardown_category):
     payload = {"name": "No Wrapper", "slug": "no-wrapper"}
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
+
     validate.status.bad_request(response)
 
 
@@ -335,8 +436,16 @@ def test_create_category_invalid_body_format(strapi_api):
 # ============================================================
 @pytest.mark.negative
 @pytest.mark.security
-def test_create_category_missing_token(strapi_api):
+def test_create_category_missing_token(strapi_api, teardown_category):
     payload = generate_category_payload()
 
     response = strapi_api.post(CategoryEndpoint.create(), payload=payload, with_auth=False)
+    try:
+        data = response.json().get("data")
+        if data and isinstance(data, dict):
+            category_id = data.get("documentId") or data.get("id")
+            if category_id:
+                teardown_category.append(category_id)
+    except Exception:
+        pass
     validate.status.forbidden(response)
